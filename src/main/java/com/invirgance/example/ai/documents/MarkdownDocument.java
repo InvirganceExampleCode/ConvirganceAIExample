@@ -71,11 +71,30 @@ public class MarkdownDocument implements Document
         return true;
     }
     
+    private String normalize(StringBuffer buffer)
+    {
+        int index = 0;
+        int end;
+        
+        if(buffer.indexOf("```") >= 0) return buffer.toString().trim();
+        
+        while((index = buffer.indexOf("<!--", index)) >= 0)
+        {
+            end = buffer.indexOf("-->", index);
+
+            if(end > index) buffer.replace(index, end, "");
+            else index = buffer.length();
+        }
+        
+        return buffer.toString().trim();
+    }
+    
     private JSONArray<String> parse(File file)
     {
         var paragraphs = new JSONArray<String>();
         var paragraph = new StringBuffer();
         
+        String normalized;
         boolean code = false;
         int c;
         
@@ -105,7 +124,10 @@ public class MarkdownDocument implements Document
                 {
                     if(!code && paragraph.length() > 0 && paragraph.charAt(paragraph.length()-1) == '\n')
                     {
-                        paragraphs.add(paragraph.toString());
+                        normalized = normalize(paragraph);
+                        
+                        if(normalized.length() > 0) paragraphs.add(normalized);
+                        
                         paragraph.setLength(0);
                     }
                     else

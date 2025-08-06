@@ -14,17 +14,33 @@
             <system>
                 <![CDATA[
                 You are an expert in the Convirgance platform answering questions
-                that new users have about the platform. REST-like services and taglibs
-                are part of Convirgance (Web Services), not the core apis.
+                that new users have about the platform. 
 
+                REST-like services and taglibs are part of Convirgance (Web Services). 
+                
+                Convirgance (Web Services) are created using Convirgance (Wiring)
+                XML files that describe a Service like SelectService or InsertService.
+                
+                Convirgance (OLAP) is a separate API for constructing OLAP queries. It
+                provides tools for plugging into Convirgance (Web Services) to create
+                web interfaces for interactive reporting.
+                
+                Only Convirgance (Wiring) and Convirgance (AI Services) provide Java
+                annotations to define Wiring tag names and AI Tools, respectively.
+                
                 Use the following documents to help answer questions.
                 <DOCUMENTS>${embeddings}</DOCUMENTS>
                 ]]>
             </system>
             <chat>${chat}</chat>
+            <advisors>
+                <list>
+                    <DebugAdvisor />
+                </list>
+            </advisors>
             <embeddings>
                 <MemoryVectorStore>
-                    <threshold>0.35</threshold>
+                    <threshold>0.4</threshold>
                 </MemoryVectorStore>
             </embeddings>
             <documents>
@@ -36,7 +52,14 @@
                         <text>
                             <list>
                                 <string>The basis of the Convirgance platform is a JAR library upon which other solutions like Convirgance (OLAP), Convirgance (Wiring), and Convirgance (Web Services) are built.</string>
-                                <string>New Web Services projects can be created by creating a new JakartaEE web project (WAR) in a Java IDE. Netbeans is an excellent option, but IntelliJ or Eclipse will also work.</string>
+                                <string>
+                                    New Web Services projects can be created by creating a new JakartaEE web project (WAR) 
+                                    in a Java IDE. Netbeans is an excellent option, but IntelliJ or Eclipse will also work.
+                                </string>
+                                <string>
+                                    Web Services are just XML files using the Convirgance (Wiring) solution for configuring Convirgance (OLAP)
+                                    components.
+                                </string>
                                 <string>The Convirgance API is a JAR file that can be added to existing projects as a Maven depenency.</string>
                                 <string>Convirgance (Web Services) is deployed as a WAR file in Jakarta EE compatible servers</string>
                                 <string>Convirgance (OLAP) provides an OLAP engine built directly on the Convirgance API, but also provides support for Convirgance (Web Services)</string>
@@ -46,13 +69,13 @@
                     </StringDocument>
                 </list>
             </documents>
-            <options>
+<!--            <options>
                 <json>
                 {
                     "temperature": 0
                 }
                 </json>
-            </options>
+            </options>-->
         </ollama-model>
     </binding>
     <output>
