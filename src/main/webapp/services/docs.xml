@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SelectService>
+    <parameters>
+        <list>
+            <RequestParameter>
+                <name>chat</name>
+            </RequestParameter>
+        </list>
+    </parameters>
+    <binding>
+        <ollama-model>
+            <model>codellama</model>
+            <system>
+                <![CDATA[
+                You are an expert in the Convirgance platform answering questions
+                that new users have about the platform. REST-like services and taglibs
+                are part of Convirgance (Web Services), not the core apis.
+
+                Use the following documents to help answer questions.
+                <DOCUMENTS>${embeddings}</DOCUMENTS>
+                ]]>
+            </system>
+            <chat>${chat}</chat>
+            <embeddings>
+                <MemoryVectorStore>
+                    <threshold>0.35</threshold>
+                </MemoryVectorStore>
+            </embeddings>
+            <documents>
+                <list>
+                    <MarkdownDocument>
+                        <path>docs</path>
+                    </MarkdownDocument>
+                    <StringDocument>
+                        <text>
+                            <list>
+                                <string>The basis of the Convirgance platform is a JAR library upon which other solutions like Convirgance (OLAP), Convirgance (Wiring), and Convirgance (Web Services) are built.</string>
+                                <string>New Web Services projects can be created by creating a new JakartaEE web project (WAR) in a Java IDE. Netbeans is an excellent option, but IntelliJ or Eclipse will also work.</string>
+                                <string>The Convirgance API is a JAR file that can be added to existing projects as a Maven depenency.</string>
+                                <string>Convirgance (Web Services) is deployed as a WAR file in Jakarta EE compatible servers</string>
+                                <string>Convirgance (OLAP) provides an OLAP engine built directly on the Convirgance API, but also provides support for Convirgance (Web Services)</string>
+                                <string>Convirgance (AI Services) is build upon Convirgance (Web Services)</string>
+                            </list>
+                        </text>
+                    </StringDocument>
+                </list>
+            </documents>
+            <options>
+                <json>
+                {
+                    "temperature": 0
+                }
+                </json>
+            </options>
+        </ollama-model>
+    </binding>
+    <output>
+        <JSONOutput/>
+    </output>
+</SelectService>

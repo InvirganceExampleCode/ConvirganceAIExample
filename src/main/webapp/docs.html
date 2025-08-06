@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Start Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="webjars/marked/16.1.2/lib/marked.umd.js"></script>
+        <style>
+            html {
+                color: #666;
+                overflow: hidden;
+                font-family: AppleSystemUIFont, sans-serif;
+                font-size: 14pt;
+            }
+            
+            body {
+                align-items: center;
+                justify-content: center;
+                background-color: #FEFEFE;
+                display: flex;
+                flex-direction: column;
+                width: 100dvw;
+                height: 100dvh;
+                max-width: 100dvw;
+                max-height: 100dvh;
+                padding: 0;
+                margin: 0;
+                overflow: hidden;
+            }
+            
+            .centered {
+                border-radius: 1rem;
+                background-color: white;
+                display: flex;
+                filter: drop-shadow(#ccc 1px 1px 4px);
+                flex-direction: column;
+                gap: 1rem;
+                width: min(80%, 800px);
+                height: min(80%, 480px);
+                margin: 0;
+                padding: 1rem;
+            }
+            
+            .centered form {
+                display: flex;
+                gap: 0.5rem;
+            }
+            
+            .centered form input {
+                flex-grow: 1;
+            }
+            
+            input, button {
+                border-radius: 0.4rem;
+                border: 1px solid #999;
+                font-family: AppleSystemUIFont, sans-serif;
+                font-size: 14pt;
+                padding: 0.4rem 0.6rem;
+            }
+            
+            button {
+                background-color: #007bff;
+                color: #FEFEFE;
+            }
+            
+            button:hover {
+                background-color: #226bef;
+                color: white;
+            }
+            
+            *[disabled], *[disabled]:hover {
+                background-color: #FEFEFE;
+                color: #ccc;
+            }
+            
+            #response {
+                height: 100%;
+                max-height: 100%;
+                overflow-y: auto;
+                flex-grow: 1;
+                font-size: 12pt;
+                line-height: 1.2lh;
+                padding: 0 0.2rem;
+                vertical-align: middle;
+            }
+            
+            #response.loading {
+                color: #ddd;
+                align-content: center;
+                text-align: center;
+                font-size: 300%;
+            }
+        </style>
+        <script>
+            async function ask()
+            {
+                var question = document.getElementById("question");
+                var button = document.getElementById("button");
+                
+                if(!question.value.trim()) return;
+                
+                button.setAttribute("disabled", "disabled");
+                question.setAttribute("disabled", "disabled");
+                document.getElementById("response").classList.add("loading");
+                document.getElementById("response").textContent = "Thinking...";
+                
+                var response = await fetch("services/docs?chat=" + encodeURIComponent(question.value));
+                var json = await response.json();
+                var markdown = marked.parse(json[0].response);
+
+                button.removeAttribute("disabled");
+                question.removeAttribute("disabled");
+                document.getElementById("response").classList.remove("loading");
+                document.getElementById("response").innerHTML = markdown;
+            }
+        </script>
+    </head>
+    <body>
+        <h2>Convirgance Help</h2>
+        <div class="centered">
+            <div>
+                <form onsubmit="ask(); return false;">
+                    <input id="question">
+                    <button id="button">Ask</button>
+                </form>
+            </div>
+            <div id="response">
+                <p>
+                Ask me something!
+                </p>
+                <ul>
+                    <li>What is Convirgance?</li>
+                </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
