@@ -59,6 +59,91 @@ public class MarkdownDocument implements Document
         this.path = path;
     }
     
+    private void compact(Block block)
+    {
+        if(block.isLeaf()) return;
+        
+        for(var child : block.children) compact(child);
+        
+        if(!block.canCompact()) return;
+
+        for(int i=1; i<block.children.size(); i++)
+        {
+            if(!block.children.get(i-1).isLeaf()) continue;
+            if(!block.children.get(i).isLeaf()) continue;
+
+            block.children.get(i-1).paragraph += "\n\n" + block.children.get(i).paragraph;
+            block.children.remove(i--);
+        }
+    }
+    
+    private void consolidate(Block block, JSONArray<String> output)
+    {
+        var buffer = new StringBuffer();
+        
+        if(!block.isLeaf())
+        {
+            for(var child : block.children)
+            {
+                consolidate(child, output);
+            }
+            
+            return;
+        }
+        
+        buffer.insert(0, block.paragraph);
+
+        while(block.parent != null)
+        {
+            block = block.parent;
+
+            buffer.insert(0, "\n\n");
+            buffer.insert(0, block.paragraph);
+        }
+
+        output.add(buffer.toString());
+    }
+    
+    private JSONArray<String> documentize(String filename, JSONArray<String> input)
+    {
+        JSONArray<String> output = new JSONArray<>();
+        Block root = new Block("File: " + filename, null, 0, new JSONArray<>());
+        Block parent = root;
+        
+        Block block;
+        int depth;
+        
+        for(String paragraph : input)
+        {
+            if(paragraph.charAt(0) == '#')
+            {
+                depth = 0;
+                
+                while(depth < paragraph.length() && paragraph.charAt(depth) == '#')
+                {
+                    depth++;
+                }
+                
+                while(depth <= parent.depth) parent = parent.parent;
+                
+                block = new Block(paragraph, parent, depth, new JSONArray<>());
+
+                parent.children.add(block);
+                
+                parent = block;
+            }
+            else
+            {
+                parent.children.add(new Block(paragraph, parent, parent.depth+1, new JSONArray<>()));
+            }
+        }
+        
+        compact(root);
+        consolidate(root, output);
+        
+        return output;
+    }
+    
     private boolean codeMarker(StringBuffer buffer)
     {
         if(buffer.length() < 3) return false;
@@ -148,7 +233,7 @@ public class MarkdownDocument implements Document
         
         if(paragraph.length() > 0) paragraphs.add(paragraph.toString());
         
-        return paragraphs;
+        return documentize(file.getName(), paragraphs);
     }
     
     private JSONArray<String> parseDirectory(File directory)
@@ -175,4 +260,40 @@ public class MarkdownDocument implements Document
         return parse(file).iterator();
     }
     
+    private class Block
+    {
+        String paragraph;
+        Block parent;
+        int depth;
+        JSONArray<Block> children;
+
+        public Block(String paragraph, Block parent, int depth, JSONArray<Block> children)
+        {
+            this.paragraph = paragraph;
+            this.parent = parent;
+            this.depth = depth;
+            this.children = children;
+        }
+        
+        public boolean isLeaf()
+        {
+            return (children.size() < 1);
+        }
+        
+        public boolean canCompact()
+        {
+            int count = 0;
+            int max = 0;
+            
+            for(var child : children)
+            {
+                if(child.isLeaf()) count++;
+                else count = 0;
+                
+                if(count > max) max = count;
+            }
+            
+            return (max > 1);
+        }
+    }
 }

@@ -69,13 +69,13 @@
                     </StringDocument>
                 </list>
             </documents>
-<!--            <options>
+            <options>
                 <json>
                 {
-                    "temperature": 0
+                    "temperature": 0.2
                 }
                 </json>
-            </options>-->
+            </options>
         </ollama-model>
     </binding>
     <output>
