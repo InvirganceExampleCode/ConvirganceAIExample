@@ -11,6 +11,7 @@
     </parameters>
     <binding>
         <ollama-start-conversation>
+            <pull>true</pull>
             <system>
                 <![CDATA[
                 Talk like ${character} and pretend to be that character. Send a greeting 

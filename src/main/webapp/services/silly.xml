@@ -10,6 +10,7 @@
     </parameters>
     <binding>
         <ollama-model>
+            <pull>true</pull>
             <system>
                 <![CDATA[
                 You are a game master answering questions about a game. Do not mention 

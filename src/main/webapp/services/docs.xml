@@ -11,6 +11,7 @@
     <binding>
         <ollama-model>
             <model>codellama</model>
+            <pull>true</pull>
             <system>
                 <![CDATA[
                 You are an expert in the Convirgance platform answering questions
