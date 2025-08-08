@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<SelectService>
+    <parameters>
+        <list>
+            <RequestParameter>
+                <name>character</name>
+            </RequestParameter>
+        </list>
+    </parameters>
+    <binding>
+        <ollama-start-conversation>
+            <system>
+                <![CDATA[
+                Talk like ${character} and pretend to be that character. Send a greeting 
+                that is in character.
+                ]]>
+            </system>
+            <chat>
+                Greet me in character as if you are starting the converstation.
+            </chat>
+            <requiredSession>
+                <list>
+                    <string>character</string>
+                </list>
+            </requiredSession>
+        </ollama-start-conversation>
+    </binding>
+    <output>
+        <JSONOutput/>
+    </output>
+</SelectService>
+
+

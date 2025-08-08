@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SelectService>
+    <parameters>
+        <list>
+            <RequestParameter>
+                <name>chat</name>
+            </RequestParameter>
+            <SessionParameter>
+                <name>character</name>
+            </SessionParameter>
+        </list>
+    </parameters>
+    <binding>
+        <ollama-model>
+            <system>
+                <![CDATA[
+                Talk like ${character} and pretend to be that character
+                ]]>
+            </system>
+            <chat>${chat}</chat>
+            <advisors>
+                <list>
+                    <ollama-conversation>
+
+                    </ollama-conversation>
+                </list>
+            </advisors>
+        </ollama-model>
+    </binding>
+    <output>
+        <JSONOutput/>
+    </output>
+</SelectService>
