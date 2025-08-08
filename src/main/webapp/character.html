@@ -141,21 +141,36 @@
                 }
             }
             
+            async function getResponse(chat)
+            {
+                var response = await fetch("services/character?chat=" + encodeURIComponent(chat));
+                var json;
+
+                if(!response.ok)
+                {
+                    return "An error occurred while chatting. Your session may have expired. Refresh the page and try again.";
+                }
+
+                json = await response.json();
+
+                return json[0].response;
+            }
+            
             async function chat()
             {
                 var question = document.getElementById("question");
                 var output = document.getElementById("response");
+                var response;
                 
                 if(!question.value.trim()) return;
                 
                 thinking(true);
                 
-                var response = await fetch("services/character?chat=" + encodeURIComponent(question.value));
-                var json = await response.json();
-
+                response = await getResponse(question.value);
+                
                 thinking(false);
                 
-                output.textContent = json[0].response;
+                output.textContent = response;
                 output.scrollTo(0, 0);
                 
                 question.setAttribute("placeholder", question.value);

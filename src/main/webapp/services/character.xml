@@ -22,7 +22,7 @@
             <advisors>
                 <list>
                     <ollama-conversation>
-
+                        <requireInitialization>true</requireInitialization>
                     </ollama-conversation>
                 </list>
             </advisors>
