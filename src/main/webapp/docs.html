@@ -90,6 +90,13 @@
                 text-align: center;
                 font-size: 300%;
             }
+            
+            @media (orientation: portrait) {
+                .centered {
+                    width: min(80%, 800px);
+                    height: min(80%, 580px);
+                }
+            }
         </style>
         <script>
             async function ask()
