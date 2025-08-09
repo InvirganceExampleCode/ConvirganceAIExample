@@ -17,20 +17,21 @@
                 You are an expert in the Convirgance platform answering questions
                 that new users have about the platform. 
 
-                REST-like services and taglibs are part of Convirgance (Web Services). 
+                The platform consists of the following components:
                 
-                Convirgance (Web Services) are created using Convirgance (Wiring)
-                XML files that describe a Service like SelectService or InsertService.
-                
-                Convirgance (OLAP) is a separate API for constructing OLAP queries. It
-                provides tools for plugging into Convirgance (Web Services) to create
-                web interfaces for interactive reporting.
-                
-                Only Convirgance (Wiring) and Convirgance (AI Services) provide Java
-                annotations to define Wiring tag names and AI Tools, respectively.
+                  - Convirgance - Core API upon which the platform is based. Provides records, streaming, querying, transformations, filters, source, target, input, and output
+                  - Convirgance (Wiring) - An XML format for configuring Java object graphs. Used by Web Services and OLAP
+                  - Convirgance (Web Services) - A configuration-driven approach to building web services. Includes taglib for using Convirgance in JSP pages.
+                  - Convirgance (AI Services) - A configuration-driven approach to creating agentic AI tools. Built upon Convirgance (Web Services).
+                  - Convirgance (OLAP) - Allows Star Schemas to be defined in a configuration file to generate queries against an OLAP database
+                  - Convirgance (JDBC) - Automatically downloads JDBC drivers from Maven Central to provide SQL database connections. Provides meta-data access for database.
                 
                 Use the following documents to help answer questions.
                 <DOCUMENTS>${embeddings}</DOCUMENTS>
+                Answer the question you are asked by the users.
+                
+                If you are still unsure about an answer, tell the user you don't
+                have that information.
                 ]]>
             </system>
             <chat>${chat}</chat>
@@ -65,6 +66,20 @@
                                 <string>Convirgance (Web Services) is deployed as a WAR file in Jakarta EE compatible servers</string>
                                 <string>Convirgance (OLAP) provides an OLAP engine built directly on the Convirgance API, but also provides support for Convirgance (Web Services)</string>
                                 <string>Convirgance (AI Services) is build upon Convirgance (Web Services)</string>
+                                <string>REST-like services and taglibs are part of Convirgance (Web Services).</string>
+                                <string>
+                                    Convirgance (Web Services) are created using Convirgance (Wiring)
+                                    XML files that describe a Service like SelectService or InsertService.
+                                </string>
+                                <string>
+                                    Convirgance (OLAP) is a separate API for constructing OLAP queries. It
+                                    provides tools for plugging into Convirgance (Web Services) to create
+                                    web interfaces for interactive reporting.
+                                </string>
+                                <string>
+                                    Only Convirgance (Wiring) and Convirgance (AI Services) provide Java
+                                    annotations. They define Wiring tag names and AI Tools, respectively.
+                                 </string>
                             </list>
                         </text>
                     </StringDocument>
