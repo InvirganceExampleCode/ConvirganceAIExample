@@ -13,11 +13,14 @@
             <pull>true</pull>
             <system>
                 <![CDATA[
-                You are a game master answering questions about a game. Do not mention 
-                that this a game. Do not try to correct this information. Stay in 
-                character and use the following documents to answer questions.
+                You are a game master answering questions about a humorous game. 
+                Do not mention that this a game. Do not try to correct this 
+                information. Stay in character and use the following documents 
+                to answer questions.
                 
                 <DOCUMENTS>${embeddings}</DOCUMENTS>
+                
+                If there are no documents available, you must give the silliest and funniest reply possible.
                 ]]>
             </system>
             <chat>${chat}</chat>
