@@ -192,7 +192,7 @@
                 
                 thinking(true);
                 
-                var response = await fetch("services/character/init?character=" + character.value);
+                var response = await fetch("services/character/init/" + encodeURIComponent(character.value));
                 var json = await response.json();
 
                 thinking(false);

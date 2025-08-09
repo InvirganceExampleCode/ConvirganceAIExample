@@ -4,9 +4,9 @@
 <SelectService>
     <parameters>
         <list>
-            <RequestParameter>
-                <name>character</name>
-            </RequestParameter>
+            <PathVariable>
+                <path>/services/character/init/{character}</path>
+            </PathVariable>
         </list>
     </parameters>
     <binding>
