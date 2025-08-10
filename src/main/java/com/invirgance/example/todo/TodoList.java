@@ -71,6 +71,19 @@ public class TodoList
         }.transform(todos);
     }
     
+    public static JSONObject getTask(long id)
+    {
+        for(var todo : todos)
+        {
+            if(todo.getLong("id") == id) 
+            {
+                return new JSONObject(todo);
+            }
+        }
+        
+        return null;
+    }
+    
     public static enum Status
     {
         TODO,

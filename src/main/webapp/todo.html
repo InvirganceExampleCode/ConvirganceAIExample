@@ -28,9 +28,9 @@
                 display: flex;
                 flex-direction: column;
                 gap: 1rem;
-                min-width: 250px;
-                width: 250px;
-                max-width: 250px;
+                min-width: 300px;
+                width: 300px;
+                max-width: 300px;
             }
             
             .chat-panel form {
@@ -145,6 +145,8 @@
                 question.removeAttribute("disabled");
                 document.getElementById("response").classList.remove("loading");
                 document.getElementById("response").innerHTML = markdown;
+                
+                getList();
             }
         </script>
     </head>

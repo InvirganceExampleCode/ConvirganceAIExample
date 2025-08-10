@@ -221,4 +221,17 @@ public class TodoTools
 
         return results.toString(4);
     }
+    
+    @Tool("Creates a new todo task")
+    public String createTask(
+            @ToolParam("Description of the task that needs to be done") String task)
+    {
+        long id = TodoList.insert(task);
+        JSONObject record = TodoList.getTask(id);
+        
+        record.put("created", transformDate(record.getLong("created")));
+        record.put("updated", "Not updated");
+        
+        return record.toString();
+    }
 }
