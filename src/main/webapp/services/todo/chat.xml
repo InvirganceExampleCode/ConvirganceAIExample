@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SelectService>
+    <parameters>
+        <list>
+            <RequestParameter>
+                <name>chat</name>
+            </RequestParameter>
+        </list>
+    </parameters>
+    <binding>
+        <ollama-model>
+            <pull>true</pull>
+            <system>
+                <![CDATA[
+                You are managing a Todo List for a user. Use available tools to
+                interrogate the list, update the list, and insert into the list
+                as requested.
+                
+                Tasks can be in TODO, DOING, DONE, CANCEL, or BLOCKED states.
+                
+                Dates are encoded in Java Epoch format which is the number of
+                milliseconds since midnight on January 1st, 1970 UTC
+                time. Higher numbers are morre recent than lower numbers.
+                
+                The user cannot see the id, so do not reference the id unless
+                the user explicitly asks. Do always include the task name
+                whenever referencing the task.
+                ]]>
+            </system>
+            <chat>${chat}</chat>
+            <tools>
+                <list>
+                    <TodoTools />
+                </list>
+            </tools>
+            <options>
+                <json>
+                { "temperature": 0 }
+                </json>
+            </options>
+            <advisors>
+                <list>
+                <DebugAdvisor />
+                </list>
+            </advisors>
+        </ollama-model>
+    </binding>
+    <output>
+        <JSONOutput/>
+    </output>
+</SelectService>

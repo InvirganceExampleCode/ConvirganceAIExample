@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<RESTService>
+    <GET>
+        <SelectService>
+            <binding>
+                <TodoBinding></TodoBinding>
+            </binding>
+            <output>
+                <JSONOutput />
+            </output>
+        </SelectService>
+    </GET>
+    <POST>
+        <InsertService>
+            <origin>
+                <RequestBodyOrigin />
+            </origin>
+            <input>
+                <JSONInput />
+            </input>
+            <consumer>
+                <TodoConsumer />
+            </consumer>
+        </InsertService>
+    </POST>
+</RESTService>
