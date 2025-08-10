@@ -78,6 +78,10 @@
                 padding: 0 0.6rem;
                 overflow: auto;
             }
+            
+            #create-controls {
+                display: none;
+            }
         </style>
         <script>
             function formatDates()
@@ -154,7 +158,7 @@
             <div class="display-panel">
                 <div id="todos"></div>
                 <div>&nbsp;</div>
-                <div>
+                <div id="create-controls">
                     <form onsubmit="create(); return false;">
                         <input id="text">
                         <button>Create</button>

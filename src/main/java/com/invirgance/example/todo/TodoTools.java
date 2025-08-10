@@ -125,14 +125,26 @@ public class TodoTools
         }.transform(TodoList.list());
     }
     
-    @Tool("Get a count of tasks in todo status")
-    public int countTodo()
+    @Tool("Get a count of all tasks regardless of state")
+    public int countAllTasks()
     {
         var count = 0;
         
+        for(var item : getTasks()) count++;
+        
+        return count;
+    }
+    
+    @Tool("Get a count of tasks for a state")
+    public int count(
+            @ToolParam("State to filter the task list by") Status state)
+    {
+        var count = 0;
+        var value = state.toString();
+        
         for(var item : getTasks()) 
         {
-            if(item.getString("state").equals(TODO.toString()))
+            if(item.getString("state").equals(value))
             {
                 count++;
             }
@@ -260,7 +272,6 @@ public class TodoTools
         
         return record.toString();
     }
-    
     
     @Tool("Updates the state of a task. Returns the details of the updated task.")
     public String updateTask(
