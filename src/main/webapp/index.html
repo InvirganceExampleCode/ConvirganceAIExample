@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Silly AI Responses</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Convirgance (AI Services) Examples</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             html {
                 color: #666;
@@ -13,128 +13,186 @@
             }
             
             body {
-                align-items: center;
-                justify-content: center;
-                background-color: #FEFEFE;
-                display: flex;
-                flex-direction: column;
-                width: 100dvw;
-                height: 100dvh;
-                max-width: 100dvw;
-                max-height: 100dvh;
-                padding: 0;
-                margin: 0;
-                overflow: hidden;
-            }
-            
-            .centered {
-                border-radius: 1rem;
-                background-color: white;
-                display: flex;
-                filter: drop-shadow(#ccc 1px 1px 4px);
-                flex-direction: column;
-                gap: 2rem;
-                width: min(70%, 800px);
-                height: min(60%, 480px);
-                margin: 0;
                 padding: 1rem;
-            }
-            
-            .centered form {
-                display: flex;
-                gap: 0.5rem;
-            }
-            
-            .centered form input {
-                flex-grow: 1;
-            }
-            
-            input, button {
-                border-radius: 0.4rem;
-                border: 1px solid #999;
-                font-family: AppleSystemUIFont, sans-serif;
-                font-size: 14pt;
-                padding: 0.4rem 0.6rem;
-            }
-            
-            button {
-                background-color: #007bff;
-                color: #FEFEFE;
-            }
-            
-            button:hover {
-                background-color: #226bef;
-                color: white;
-            }
-            
-            *[disabled] {
-                background-color: #FEFEFE;
-                color: #ccc;
-            }
-            
-            #response {
-                height: 100%;
-                max-height: 100%;
-                overflow-y: auto;
-                flex-grow: 1;
                 line-height: 1.2lh;
-                padding: 0 0.2rem;
-                vertical-align: middle;
-                white-space: pre-wrap;
             }
             
-            #response.loading {
-                color: #ddd;
-                align-content: center;
-                text-align: center;
-                font-size: 300%;
+            .application {
+                display: flex;
+                gap: 1rem;
+                margin: 1.1rem 1rem;
             }
             
-            @media (orientation: portrait) {
-                .centered {
-                    width: min(80%, 800px);
-                    height: min(80%, 580px);
-                }
+            .application .icon img {
+                border-radius: 1rem;
+                width: 156px;
+                height: 156px;
+            }
+            
+            .description {
+                font-size: 14pt;
+                flex-grow: 1;
+            }
+            
+            .features table {
+                border: 1px solid #ccc;
+                border-radius: 1rem;
+                font-size: 70%;
+                padding: 8px;
+            }
+            
+            .features td {
+                border: 0;
+                padding: 0 0.4rem;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+            
+            a {
+                color: #226bef;
+                text-decoration: none;
+            }
+            
+            a:hover {
+                text-decoration: underline;
             }
         </style>
-        <script>
-            async function ask()
-            {
-                var question = document.getElementById("question");
-                var button = document.getElementById("button");
-                
-                if(!question.value.trim()) return;
-                
-                button.setAttribute("disabled", "disabled");
-                question.setAttribute("disabled", "disabled");
-                document.getElementById("response").classList.add("loading");
-                document.getElementById("response").textContent = "Thinking...";
-                
-                var response = await fetch("services/silly?chat=" + encodeURIComponent(question.value));
-                var json = await response.json();
-
-                button.removeAttribute("disabled");
-                question.removeAttribute("disabled");
-                document.getElementById("response").classList.remove("loading");
-                document.getElementById("response").textContent = json[0].response;
-            }
-        </script>
     </head>
     <body>
-        <h2>This is about to get silly!</h2>
-        <div class="centered">
-            <div>
-                <form onsubmit="ask(); return false;">
-                    <input id="question">
-                    <button id="button">Ask</button>
-                </form>
+        <div class="application">
+            <div class="icon">
+                <a href="silly.html">
+                <img src="images/silly.png" alt="Picture of a joker with the word AI in the lower right corner" />
+                </a>
             </div>
-            <div id="response">
-                Ask me something!
-                
-                - Why is the sky blue?
-                - How many r's in strawberry?
-                - How much wood could a woodchuck chuck?
+            <div class="description">
+                <a href="silly.html">Silly AI</a> - AI provides silly answers to questions using information drawn from an in-memory RAG.
+            </div>
+            <div class="features">
+                <table>
+                    <tr>
+                        <td>RAG</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                    <tr>
+                        <td>Markdown Sourcing</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>Conversation</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>Tools</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>System Prompt</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="application">
+            <div class="icon">
+                <a href="docs.html">
+                <img src="images/docs.png" alt="Stack of books with the word AI in the lower right corner" />
+                </a>
+            </div>
+            <div class="description">
+                <a href="docs.html">Convirgance Help</a> - Interactive help with the Convirgance platform.
+            </div>
+            <div class="features">
+                <table>
+                    <tr>
+                        <td>RAG</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                    <tr>
+                        <td>Markdown Sourcing</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                    <tr>
+                        <td>Conversation</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>Tools</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>System Prompt</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="application">
+            <div class="icon">
+                <a href="character.html">
+                <img src="images/character.png" alt="Smiling pirate with the word AI in the lower right corner" />
+                </a>
+            </div>
+            <div class="description">
+                <a href="character.html">Characters</a> - Conversational chatbot posing as a variety of characters.
+            </div>
+            <div class="features">
+                <table>
+                    <tr>
+                        <td>RAG</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                    <tr>
+                        <td>Markdown Sourcing</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>Conversation</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                    <tr>
+                        <td>Tools</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>System Prompt</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="application">
+            <div class="icon">
+                <a href="todo.html">
+                <img src="images/todo.png" alt="Pencil and paper with the word AI in the lower right corner" />
+                </a>
+            </div>
+            <div class="description">
+                <a href="todo.html">Todo</a> - An AI driven TODO list.
+            </div>
+            <div class="features">
+                <table>
+                    <tr>
+                        <td>RAG</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>Markdown Sourcing</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>Conversation</td>
+                        <td>&#x274C;</td>
+                    </tr>
+                    <tr>
+                        <td>Tools</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                    <tr>
+                        <td>System Prompt</td>
+                        <td>&#x2705;</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </body>
