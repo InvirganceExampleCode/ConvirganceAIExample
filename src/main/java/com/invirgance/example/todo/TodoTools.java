@@ -31,7 +31,6 @@ import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.transform.IdentityTransformer;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
 import static com.invirgance.example.todo.TodoList.Status;
-import static com.invirgance.example.todo.TodoList.Status.*;
 import java.util.Comparator;
 
 /**
@@ -47,7 +46,19 @@ public class TodoTools
     private static final long DAY = HOUR * 24;
     private static final long YEAR = DAY * 365;
     
-    private String transformDate(long date)
+    private static boolean isNumber(String value)
+    {
+        if(value.length() < 1) return false;
+        
+        for(int i=0; i<value.length(); i++)
+        {
+            if(!Character.isDigit(value.charAt(i))) return false;
+        }
+        
+        return true;
+    }
+    
+    private static String transformDate(long date)
     {
         StringBuffer text = new StringBuffer();
         JSONArray<String> components = new JSONArray<>();
@@ -117,8 +128,10 @@ public class TodoTools
             @Override
             public JSONObject transform(JSONObject record) throws ConvirganceException
             {
+                if(record.getLong("created") == record.getLong("updated")) record.put("updated", "Not updated");
+                else record.put("updated", transformDate(record.getLong("updated")));
+                
                 record.put("created", transformDate(record.getLong("created")));
-                record.put("updated", transformDate(record.getLong("updated")));
                 
                 return record;
             }
@@ -159,18 +172,13 @@ public class TodoTools
         var list = new JSONArray<JSONObject>();
         
         for(var item : getTasks()) 
-        {
-            if(item.getLong("created") == item.getLong("updated")) item.put("updated", "Not updated");
-            else item.put("updated", transformDate(item.getLong("updated")));
-            
-            item.put("created", transformDate(item.getLong("created")));
-            
+        {   
             list.add(item);
         }
         
         list = new JSONArray<>(list.reversed());
         
-        return list.toString(4);
+        return table(list, true);
     }
     
     @Tool("Obtains a list of all tasks in the requested state")
@@ -187,12 +195,21 @@ public class TodoTools
             }
         }
         
-        return results.toString(4);
+        return table(results, true);
     }
     
-    @Tool("Returns the newest task or tasks in order of creation")
-    public String newest(
-            @ToolParam("Number of tasks to return. Pass 1 if you only need to know the latest.") int count)
+    
+    // Not actually a tool, but included for models 
+    // that insist on parameters being optional
+    @Tool("Returns the newest task")
+    public String newest()
+    {
+        return newestList(1);
+    }
+    
+    @Tool("Returns the most recently created tasks in order of creation")
+    public String newestList(
+            @ToolParam("Number of tasks to return. Pass 1 if you only need to know the newest.") int count)
     {
         var list = new JSONArray<JSONObject>();
         var results = new JSONArray<JSONObject>();
@@ -218,11 +235,17 @@ public class TodoTools
             if(results.size() >= count) break;
         }
 
-        return results.toString(4);
+        return table(results, true);
     }
     
-    @Tool("Returns the oldest task or tasks in order of creation")
-    public String oldest(
+    @Tool("Returns the oldest task")
+    public String oldest()
+    {
+        return oldestList(1);
+    }
+    
+    @Tool("Returns the oldest tasks in reverse order of creation")
+    public String oldestList(
             @ToolParam("Number of tasks to return. Pass 1 if you only need to know the oldest.") int count)
     {
         var list = new JSONArray<JSONObject>();
@@ -249,7 +272,7 @@ public class TodoTools
             if(results.size() >= count) break;
         }
 
-        return results.toString(4);
+        return table(results, true);
     }
     
     @Tool("Creates a new todo task. This is an irreversible task, so only call when you intend to create a task. Returns the details of the created task.")
@@ -286,5 +309,51 @@ public class TodoTools
         result.put("updated", transformDate(result.getLong("updated")));
         
         return result.toString();
+    }
+    
+    public static String table(Iterable<JSONObject> todos, boolean extended)
+    {
+        StringBuffer buffer = new StringBuffer();
+        int count = 0;
+        
+        buffer.append("\n");
+        buffer.append("| ID | Task | State |");
+        
+        if(extended) buffer.append(" | Created | Updated |\n");
+        else buffer.append("\n");
+        
+        buffer.append("|----|------|-------|");
+        
+        if(extended) buffer.append(" |---------|---------|\n");
+        else buffer.append("\n");
+        
+        for(var record : todos)
+        {
+            buffer.append("| ").append(record.getString("id"));
+            buffer.append(" | ").append(record.getString("text"));
+            buffer.append(" | ").append(record.getString("state"));
+            
+            if(extended)
+            {
+                if(isNumber(record.getString("created")))
+                {
+                    if(record.getLong("created") == record.getLong("updated")) record.put("updated", "Not updated");
+                    else record.put("updated", transformDate(record.getLong("updated")));
+
+                    record.put("created", transformDate(record.getLong("created")));
+                }
+                
+                buffer.append(" | ").append(record.getString("created"));
+                buffer.append(" | ").append(record.getString("updated"));
+            }
+            
+            buffer.append(" |\n");
+            
+            count++;
+        }
+        
+        if(count < 1) buffer.append("\nThere are no tasks in the todo list.\n");
+        
+        return buffer.toString();
     }
 }

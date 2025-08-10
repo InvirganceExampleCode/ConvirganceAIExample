@@ -29,8 +29,8 @@
                 flex-direction: column;
                 gap: 1rem;
                 min-width: 300px;
-                width: 300px;
-                max-width: 300px;
+                width: min(40%, 350px);
+                max-width: min(40%, 480px);
             }
             
             .chat-panel form {
@@ -46,7 +46,7 @@
                 border-radius: 0.4rem;
                 border: 1px solid #999;
                 font-family: AppleSystemUIFont, sans-serif;
-                /*font-size: 14pt;*/
+                font-size: 10pt;
                 padding: 0.4rem 0.6rem;
             }
             
@@ -67,8 +67,8 @@
             
             #panels {
                 display: flex;
-                height: calc(100dvh - 8rem);
-                padding: 4rem;
+                height: calc(100dvh - 4rem);
+                padding: 2rem;
             }
             
             #response {
@@ -121,11 +121,24 @@
                 var response = await fetch("services/todo", options);
                 var keys = await response.json();
                 
-                console.log(keys);
-                
                 getList();
                 
                 input.value = "";
+            }
+            
+            async function getResponse(question)
+            {
+                try
+                {
+                    var response = await fetch("services/todo/chat?chat=" + encodeURIComponent(question));
+                    var json = await response.json();
+
+                    return json[0].message.content;
+                }
+                catch(e)
+                {
+                    return "**I'm sorry!** I think I misunderstood and am unable to process your request. Can you rephrase your request?";
+                }
             }
             
             async function ask()
@@ -140,9 +153,8 @@
                 document.getElementById("response").classList.add("loading");
                 document.getElementById("response").textContent = "Thinking...";
                 
-                var response = await fetch("services/todo/chat?chat=" + encodeURIComponent(question.value));
-                var json = await response.json();
-                var markdown = marked.parse(json[0].message.content);
+                var response = await getResponse(question.value);
+                var markdown = marked.parse(response);
 
                 button.removeAttribute("disabled");
                 question.removeAttribute("disabled");

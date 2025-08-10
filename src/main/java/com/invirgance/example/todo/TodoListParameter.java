@@ -21,70 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.invirgance.example.ai.advisors;
+package com.invirgance.example.todo;
 
-import com.invirgance.convirgance.ai.Advisor;
+import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
+import com.invirgance.convirgance.web.http.HttpRequest;
+import com.invirgance.convirgance.web.parameter.Parameter;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
+import static com.invirgance.example.todo.TodoList.Status;
 
 /**
  *
  * @author jbanes
  */
 @Wiring
-public class DebugAdvisor implements Advisor
+public class TodoListParameter implements Parameter
 {
-    private boolean debugChat;
-    private boolean debugResponse;
-    private boolean focused;
-
-    public boolean isDebugChat()
-    {
-        return debugChat;
-    }
-
-    public void setDebugChat(boolean debugChat)
-    {
-        this.debugChat = debugChat;
-    }
-
-    public boolean isDebugResponse()
-    {
-        return debugResponse;
-    }
-
-    public void setDebugResponse(boolean debugResponse)
-    {
-        this.debugResponse = debugResponse;
-    }
-
-    public boolean isFocused()
-    {
-        return focused;
-    }
-
-    public void setFocused(boolean focused)
-    {
-        this.focused = focused;
-    }
+    private String name;
     
     @Override
-    public void before(JSONObject parameters, JSONObject message)
+    public String getName()
     {
-        if(debugChat)
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    @Override
+    public Object getValue(HttpRequest request)
+    {
+        JSONArray<JSONObject> filtered = new JSONArray<>();
+        Status state;
+        
+        for(var record : TodoList.list())
         {
-            if(focused) System.out.println(message.get("messages"));
-            else System.out.println(message.toString(4));
+            state = Status.valueOf(record.getString("state"));
+            
+            if(!state.isDone()) filtered.add(record);
         }
+        
+        return TodoTools.table(filtered, false);
     }
     
-    @Override
-    public void after(JSONObject parameters, JSONObject message)
-    {
-        if(debugResponse)
-        {
-            if(focused) System.out.println(message.get("message"));
-            else System.out.println(message.toString(4));
-        }
-    }
 }

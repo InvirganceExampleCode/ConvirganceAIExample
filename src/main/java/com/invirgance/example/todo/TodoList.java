@@ -106,6 +106,11 @@ public class TodoList
         DOING,
         DONE,
         CANCEL,
-        BLOCKED
+        BLOCKED;
+        
+        public boolean isDone()
+        {
+            return (this == DONE || this == CANCEL);
+        }
     }
 }

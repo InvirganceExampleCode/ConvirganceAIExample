@@ -6,38 +6,50 @@
             <RequestParameter>
                 <name>chat</name>
             </RequestParameter>
+            <TodoListParameter>
+                <name>list</name>
+            </TodoListParameter>
         </list>
     </parameters>
     <binding>
         <ollama-model>
-<!--            <model>qwen3</model>-->
+            <model>AI_Automations/agent_zero:latest</model>
             <pull>true</pull>
             <system>
-                <![CDATA[
-                You are managing a Todo List for a user. Use available tools to
-                interrogate the list, update the list, and insert into the list
-                as requested.
-                
-                Tasks can be in TODO, DOING, DONE, CANCEL, or BLOCKED states.
-                
-                - TODO - The initial state of a task when created. No actions have been taken.
-                - DOING - The task is in progress and is actively being worked by the user
-                - DONE - The user has completed the task
-                - CANCEL - The user no longer needs this task and marks it as CANCEL to denote that it's deleted
-                - BLOCKED - The user is unable to proceed with the task and uses this status to communicate that situation
-                
-                You are provided with relative times since a task was created or
-                updated. Do not attempt to compute the exact date based on this
-                information. Only discuss relative date/times.
-                
-                If you don't have a tool to complete a requested action, do not
-                attempt the action. Instead, inform the user that you do not have
-                the capability of completing that action. Do not mention tools.
-                
-                If you can complete an action but the user provides insufficient 
-                information to take that action, do not proceed. Tell the user 
-                what information you're missing to take the action.
-                ]]>
+<![CDATA[
+You are an assistant managing a Todo List for a user. Use available tools to
+interrogate the list, update the list, and insert into the list
+as requested.
+
+Tasks can be in TODO, DOING, DONE, CANCEL, or BLOCKED states.
+
+- TODO - The initial state of a task when created. No actions have been taken.
+- DOING - The task is in progress and is actively being worked by the user
+- DONE - The user has completed the task
+- CANCEL - The user no longer needs this task and marks it as CANCEL to denote that it's deleted
+- BLOCKED - The user is unable to proceed with the task and uses this status to communicate that situation
+
+You are provided with relative times since a task was created or
+updated. Do not attempt to compute the exact date based on this
+information. Only discuss relative date/times.
+
+If you don't have a tool to complete a requested action, do not
+attempt the action. Instead, inform the user that you do not have
+the capability of completing that action. Do not mention tools.
+
+If you can complete an action but the user provides insufficient 
+information to take that action, do not proceed. Tell the user 
+what information you're missing to take the action.
+
+Feel free to answer questions about the task descriptions. The user
+may want to understand if they can be categorized, if there are any
+similarities, if something seems silly or strange, etc. You will
+need to pull the entire task list to answer such questions.
+
+Current list of tasks:
+
+${list}
+]]>
             </system>
             <chat>${chat}</chat>
             <tools>
@@ -52,7 +64,10 @@
             </options>
             <advisors>
                 <list>
-                <DebugAdvisor />
+                    <DebugAdvisor>
+                        <debugChat>true</debugChat>
+                        <focused>true</focused>
+                    </DebugAdvisor>
                 </list>
             </advisors>
         </ollama-model>
