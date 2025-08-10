@@ -39,8 +39,50 @@ import static com.invirgance.example.todo.TodoList.Status.*;
 @Wiring
 public class TodoList implements Binding, Consumer
 {
+    public static final int MAX_SIZE = 25;
+    
     private static final JSONArray<JSONObject> todos = new JSONArray<>();
     private static long index = 1;
+    
+    private static void attemptDelete()
+    {
+        JSONObject record;
+        int recent = -1;
+        long timestamp = -1;
+        
+        for(int i=0; i<todos.size(); i++)
+        {
+            record = todos.get(i);
+            
+            if(record.getString("state").equals("CANCEL") && (recent < 0 || timestamp > record.getLong("updated")))
+            {
+                recent = i;
+                timestamp = record.getLong("updated");
+            }
+        }
+        
+        if(recent >= 0)
+        {
+            todos.remove(recent);
+            return;
+        }
+        
+        for(int i=0; i<todos.size(); i++)
+        {
+            record = todos.get(i);
+            
+            if(record.getString("state").equals("DONE") && (recent < 0 || timestamp > record.getLong("updated")))
+            {
+                recent = i;
+                timestamp = record.getLong("updated");
+            }
+        }
+
+        if(recent >= 0)
+        {
+            todos.remove(recent);
+        }
+    }
     
     public static long insert(String text)
     {
@@ -50,6 +92,9 @@ public class TodoList implements Binding, Consumer
         
         synchronized(todos)
         {
+            if(todos.size() >= MAX_SIZE) attemptDelete();
+            if(todos.size() >= MAX_SIZE) return -1;
+            
             id = index++;
             
             todo.put("id", id);

@@ -13,21 +13,22 @@
     </parameters>
     <binding>
         <ollama-model>
-            <model>AI_Automations/agent_zero:latest</model>
+            <model>AI_Automations/agent_zero</model>
             <pull>true</pull>
             <system>
 <![CDATA[
 You are an assistant managing a Todo List for a user. Use available tools to
 interrogate the list, update the list, and insert into the list
-as requested.
+as requested. You must use a tool to change the contents of the list or states of
+tasks.
 
 Tasks can be in TODO, DOING, DONE, CANCEL, or BLOCKED states.
 
-- TODO - The initial state of a task when created. No actions have been taken.
-- DOING - The task is in progress and is actively being worked by the user
+- TODO - The initial state of a task when created. No actions have been taken. (not done)
+- DOING - The task is in progress and is actively being worked by the user (not done)
 - DONE - The user has completed the task
-- CANCEL - The user no longer needs this task and marks it as CANCEL to denote that it's deleted
-- BLOCKED - The user is unable to proceed with the task and uses this status to communicate that situation
+- CANCEL - The user no longer needs this task. Updating a task to this status is synonymous with being deleted.
+- BLOCKED - The user is unable to proceed with the task and uses this status to communicate that situation (not done)
 
 You are provided with relative times since a task was created or
 updated. Do not attempt to compute the exact date based on this
@@ -65,14 +66,6 @@ about them.
                 { "temperature": 0 }
                 </json>
             </options>
-<!--            <advisors>
-                <list>
-                    <DebugAdvisor>
-                        <debugChat>true</debugChat>
-                        <focused>true</focused>
-                    </DebugAdvisor>
-                </list>
-            </advisors>-->
         </ollama-model>
     </binding>
     <output>

@@ -315,6 +315,8 @@ public class TodoTools
     {
         long id = TodoList.insert(task);
         
+        if(id < 0) return "Unable to create task. List is full. User needs to complete or cancel tasks first.";
+        
         return getTask(id);
     }
     

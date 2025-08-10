@@ -8,7 +8,7 @@
         <tr>
             <th>#</th>
             <th>Todo Item</th>
-            <th>Current Status</th>
+            <th>Status</th>
             <th>Created</th>
             <th>Updated</th>
         </tr>
