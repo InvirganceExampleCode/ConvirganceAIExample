@@ -30,9 +30,9 @@ import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.transform.IdentityTransformer;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
+import static com.invirgance.example.todo.TodoList.Status;
 import static com.invirgance.example.todo.TodoList.Status.*;
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  *
@@ -104,8 +104,9 @@ public class TodoTools
             
             text.append((delta / SECOND)).append(" ").append(((delta / SECOND) > 1) ? "second" : "seconds");
         }
-            
-        text.append(" ago");
+        
+        if(text.length() < 1) text.append("Just now");
+        else text.append(" ago");
         
         return text.toString();
     }
@@ -140,24 +141,41 @@ public class TodoTools
         return count;
     }
     
-    @Tool("Returns a list of up to 25 tasks in todo status")
-    public String listTodo()
+    @Tool("Returns the complete list of tasks")
+    public String listTasks()
     {
         var list = new JSONArray<JSONObject>();
         
-        for(var item : getTasks())
+        for(var item : getTasks()) 
         {
-            if(item.getString("state").equals(TODO.toString()))
-            {
-                list.add(item);
-            }
+            if(item.getLong("created") == item.getLong("updated")) item.put("updated", "Not updated");
+            else item.put("updated", transformDate(item.getLong("updated")));
             
-            if(list.size() >= 25) break;
+            item.put("created", transformDate(item.getLong("created")));
+            
+            list.add(item);
         }
         
         list = new JSONArray<>(list.reversed());
         
         return list.toString(4);
+    }
+    
+    @Tool("Obtains a list of all tasks in the requested state")
+    public String listTasksByState(
+            @ToolParam("The state of the desired tasks") Status state)
+    {
+        var results = new JSONArray<JSONObject>();
+        
+        for(var record : getTasks())
+        {
+            if(record.getString("state").equals(state.toString()))
+            {
+                results.add(record);
+            }
+        }
+        
+        return results.toString(4);
     }
     
     @Tool("Returns the newest task or tasks in order of creation")
@@ -222,16 +240,40 @@ public class TodoTools
         return results.toString(4);
     }
     
-    @Tool("Creates a new todo task")
+    @Tool("Creates a new todo task. This is an irreversible task, so only call when you intend to create a task. Returns the details of the created task.")
     public String createTask(
-            @ToolParam("Description of the task that needs to be done") String task)
+            @ToolParam("Description or title of the task") String task)
     {
         long id = TodoList.insert(task);
-        JSONObject record = TodoList.getTask(id);
+        
+        return getTask(id);
+    }
+    
+    @Tool("Get a task by its numeric identifier")
+    public String getTask(
+            @ToolParam("Numeric identifier for the task") long id)
+    {
+        JSONObject record = TodoList.get(id);
         
         record.put("created", transformDate(record.getLong("created")));
         record.put("updated", "Not updated");
         
         return record.toString();
+    }
+    
+    
+    @Tool("Updates the state of a task. Returns the details of the updated task.")
+    public String updateTask(
+            @ToolParam("Numeric identifier for the task to update") long id,
+            @ToolParam("The new state for the task") Status state)
+    {
+        var result = TodoList.update(id, state);
+        
+        if(result == null) return "Unable to update task with id " + id;
+        
+        result.put("created", transformDate(result.getLong("created")));
+        result.put("updated", transformDate(result.getLong("updated")));
+        
+        return result.toString();
     }
 }

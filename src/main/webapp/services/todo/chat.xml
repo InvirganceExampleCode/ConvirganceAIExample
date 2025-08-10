@@ -10,6 +10,7 @@
     </parameters>
     <binding>
         <ollama-model>
+<!--            <model>qwen3</model>-->
             <pull>true</pull>
             <system>
                 <![CDATA[
@@ -19,13 +20,17 @@
                 
                 Tasks can be in TODO, DOING, DONE, CANCEL, or BLOCKED states.
                 
-                Dates are encoded in Java Epoch format which is the number of
-                milliseconds since midnight on January 1st, 1970 UTC
-                time. Higher numbers are morre recent than lower numbers.
+                You are provided with relative times since a task was created or
+                updated. Do not attempt to compute the exact date based on this
+                information. Only discuss relative date/times.
                 
-                The user cannot see the id, so do not reference the id unless
-                the user explicitly asks. Do always include the task name
-                whenever referencing the task.
+                If you don't have a tool to complete a requested action, do not
+                attempt the action. Instead, inform the user that you do not have
+                the capability of completing that action. Do not mention tools.
+                
+                If you can complete an action but the user provides insufficient 
+                information to take that action, do not proceed. Tell the user 
+                what information you're missing to take the action.
                 ]]>
             </system>
             <chat>${chat}</chat>
@@ -41,7 +46,7 @@
             </options>
             <advisors>
                 <list>
-                <DebugAdvisor />
+                <!--<DebugAdvisor />-->
                 </list>
             </advisors>
         </ollama-model>

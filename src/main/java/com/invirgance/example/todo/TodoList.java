@@ -71,12 +71,28 @@ public class TodoList
         }.transform(todos);
     }
     
-    public static JSONObject getTask(long id)
+    public static JSONObject get(long id)
     {
         for(var todo : todos)
         {
             if(todo.getLong("id") == id) 
             {
+                return new JSONObject(todo);
+            }
+        }
+        
+        return null;
+    }
+    
+    public static JSONObject update(long id, Status state)
+    {
+        for(var todo : todos)
+        {
+            if(todo.getLong("id") == id) 
+            {
+                todo.put("state", state.toString());
+                todo.put("updated", System.currentTimeMillis());
+                
                 return new JSONObject(todo);
             }
         }
