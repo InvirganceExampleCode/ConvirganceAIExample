@@ -4,7 +4,7 @@
     <GET>
         <SelectService>
             <binding>
-                <TodoBinding></TodoBinding>
+                <TodoList></TodoList>
             </binding>
             <output>
                 <JSONOutput />
@@ -20,7 +20,7 @@
                 <JSONInput />
             </input>
             <consumer>
-                <TodoConsumer />
+                <TodoList />
             </consumer>
         </InsertService>
     </POST>

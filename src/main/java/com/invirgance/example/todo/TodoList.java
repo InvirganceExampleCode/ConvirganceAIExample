@@ -27,13 +27,17 @@ import com.invirgance.convirgance.ConvirganceException;
 import com.invirgance.convirgance.json.JSONArray;
 import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.transform.IdentityTransformer;
+import com.invirgance.convirgance.web.binding.Binding;
+import com.invirgance.convirgance.web.consumer.Consumer;
+import com.invirgance.convirgance.wiring.annotation.Wiring;
 import static com.invirgance.example.todo.TodoList.Status.*;
 
 /**
  *
  * @author jbanes
  */
-public class TodoList
+@Wiring
+public class TodoList implements Binding, Consumer
 {
     private static final JSONArray<JSONObject> todos = new JSONArray<>();
     private static long index = 1;
@@ -98,6 +102,28 @@ public class TodoList
         }
         
         return null;
+    }
+    
+    @Override
+    public Iterable<JSONObject> getBinding(JSONObject parameters)
+    {
+        return TodoList.list();
+    }
+    
+    @Override
+    public JSONArray consume(Iterable<JSONObject> iterable, JSONObject parameters)
+    {
+        JSONArray keys = new JSONArray();
+        long key;
+        
+        for(var record : iterable)
+        {
+            key = TodoList.insert(record.getString("task"));
+            
+            keys.add(key);
+        }
+        
+        return keys;
     }
     
     public static enum Status

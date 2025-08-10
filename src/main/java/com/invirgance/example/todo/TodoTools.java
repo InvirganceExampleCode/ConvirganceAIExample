@@ -198,9 +198,6 @@ public class TodoTools
         return table(results, true);
     }
     
-    
-    // Not actually a tool, but included for models 
-    // that insist on parameters being optional
     @Tool("Returns the newest task")
     public String newest()
     {
@@ -275,6 +272,43 @@ public class TodoTools
         return table(results, true);
     }
     
+    @Tool("Returns the most recently updated task")
+    public String mostRecentlyUpdated()
+    {
+        return mostRecentlyUpdatedList(1);
+    }
+    
+    @Tool("Returns the most recently updated tasks in order of creation")
+    public String mostRecentlyUpdatedList(
+            @ToolParam("Number of tasks to return. Pass 1 if you only need to know the newest.") int count)
+    {
+        var list = new JSONArray<JSONObject>();
+        var results = new JSONArray<JSONObject>();
+        
+        for(var record : TodoList.list()) list.add(record);
+        
+        list.sort(new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject left, JSONObject right)
+            {
+                return (int)(right.getLong("created") - left.getLong("created"));
+            }
+        });
+        
+        for(var item : list)
+        {
+            if(item.getLong("created") == item.getLong("updated")) item.put("updated", "Not updated");
+            else item.put("updated", transformDate(item.getLong("updated")));
+            
+            item.put("created", transformDate(item.getLong("created")));
+            results.add(item);
+            
+            if(results.size() >= count) break;
+        }
+
+        return table(results, true);
+    }
+    
     @Tool("Creates a new todo task. This is an irreversible task, so only call when you intend to create a task. Returns the details of the created task.")
     public String createTask(
             @ToolParam("Description or title of the task") String task)
@@ -290,10 +324,7 @@ public class TodoTools
     {
         JSONObject record = TodoList.get(id);
         
-        record.put("created", transformDate(record.getLong("created")));
-        record.put("updated", "Not updated");
-        
-        return record.toString();
+        return table(new JSONArray<JSONObject>(record), false);
     }
     
     @Tool("Updates the state of a task. Returns the details of the updated task.")
@@ -309,6 +340,48 @@ public class TodoTools
         result.put("updated", transformDate(result.getLong("updated")));
         
         return result.toString();
+    }
+    
+    @Tool("Updates the state of the most recently created task. Returns the details of the updated task.")
+    public String updateMostRecentTask(
+            @ToolParam("The new state for the task") Status state)
+    {
+        JSONObject recent = null;
+        
+        for(var record : TodoList.list())
+        {
+            if(recent == null || record.getLong("created") > recent.getLong("created"))
+            {
+                recent = record;
+            }
+        }
+        
+        if(recent == null) return "No task was found to update";
+        
+        recent = TodoList.update(recent.getLong("id"), state);
+        
+        return table(new JSONArray<>(recent), true);
+    }
+    
+    @Tool("Changes the state of the task that was last updated. Perfect for reversing a change. Returns the details of the updated task.")
+    public String updateMostRecentlyUpdatedTask(
+            @ToolParam("The new state for the task") Status state)
+    {
+        JSONObject recent = null;
+        
+        for(var record : TodoList.list())
+        {
+            if(recent == null || record.getLong("updated") > recent.getLong("updated"))
+            {
+                recent = record;
+            }
+        }
+        
+        if(recent == null) return "No task was found to update";
+        
+        recent = TodoList.update(recent.getLong("id"), state);
+        
+        return table(new JSONArray<>(recent), true);
     }
     
     public static String table(Iterable<JSONObject> todos, boolean extended)

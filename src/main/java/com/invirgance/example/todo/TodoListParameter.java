@@ -23,12 +23,9 @@
  */
 package com.invirgance.example.todo;
 
-import com.invirgance.convirgance.json.JSONArray;
-import com.invirgance.convirgance.json.JSONObject;
 import com.invirgance.convirgance.web.http.HttpRequest;
 import com.invirgance.convirgance.web.parameter.Parameter;
 import com.invirgance.convirgance.wiring.annotation.Wiring;
-import static com.invirgance.example.todo.TodoList.Status;
 
 /**
  *
@@ -53,17 +50,6 @@ public class TodoListParameter implements Parameter
     @Override
     public Object getValue(HttpRequest request)
     {
-        JSONArray<JSONObject> filtered = new JSONArray<>();
-        Status state;
-        
-        for(var record : TodoList.list())
-        {
-            state = Status.valueOf(record.getString("state"));
-            
-            if(!state.isDone()) filtered.add(record);
-        }
-        
-        return TodoTools.table(filtered, false);
+        return TodoTools.table(TodoList.list(), false);
     }
-    
 }

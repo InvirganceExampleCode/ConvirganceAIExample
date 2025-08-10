@@ -49,6 +49,9 @@ need to pull the entire task list to answer such questions.
 Current list of tasks:
 
 ${list}
+
+Do not show CANCEL or DONE tasks to the user unless the user explicitly asks 
+about them.
 ]]>
             </system>
             <chat>${chat}</chat>
@@ -62,14 +65,14 @@ ${list}
                 { "temperature": 0 }
                 </json>
             </options>
-            <advisors>
+<!--            <advisors>
                 <list>
                     <DebugAdvisor>
                         <debugChat>true</debugChat>
                         <focused>true</focused>
                     </DebugAdvisor>
                 </list>
-            </advisors>
+            </advisors>-->
         </ollama-model>
     </binding>
     <output>
