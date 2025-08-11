@@ -13,5 +13,5 @@ This repository contains the code for four simple applications:
 - [Character](https://retailexplorer.invirgance.org/ai/character.html) - A conversational chat bot that pretends to be various characters like Pirates, Wizards, and Comedians
 - [TODO List](https://retailexplorer.invirgance.org/ai/todo.html) - A todo app powered entirely by AI chat
 
-<img width="400" alt="Silly app" src="https://github.com/user-attachments/assets/f9cf1e8a-c81b-43be-8409-5bb43991089c" /> <img width="480" alt="Todo app" src="https://github.com/user-attachments/assets/9a372300-4c9b-4dea-bbd9-9bc846ad47ec" />
+<img width="320" alt="Silly app" src="https://github.com/user-attachments/assets/f9cf1e8a-c81b-43be-8409-5bb43991089c" /> <img width="360" alt="Todo app" src="https://github.com/user-attachments/assets/9a372300-4c9b-4dea-bbd9-9bc846ad47ec" />
 
