@@ -9,8 +9,8 @@
             <th>#</th>
             <th>Todo Item</th>
             <th>Status</th>
-            <th>Created</th>
-            <th>Updated</th>
+            <th class="hide-mobile">Created</th>
+            <th class="hide-mobile">Updated</th>
         </tr>
     </thead>
     <tbody>
@@ -19,8 +19,8 @@
             <td>${todo.id}</td>
             <td>${todo.text}</td>
             <td>${todo.state}</td>
-            <td class="timestamp">${todo.created}</td>
-            <td class="timestamp">${todo.updated}</td>
+            <td class="timestamp hide-mobile">${todo.created}</td>
+            <td class="timestamp hide-mobile">${todo.updated}</td>
         </tr>
     </virge:iterate>
     </table>

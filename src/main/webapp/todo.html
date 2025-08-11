@@ -4,7 +4,7 @@
     <head>
         <title>Todo List</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
         <script src="webjars/marked/16.1.2/lib/marked.umd.js"></script>
         <style>
             body {
@@ -87,6 +87,41 @@
             
             #create-controls {
                 display: none;
+            }
+            
+            @media (orientation: portrait) {
+                
+                #panels {
+                    flex-direction: column;
+                    min-height: calc(100dvh - 4rem);
+                    height: calc(100dvh - 4rem);
+                    max-height: calc(100dvh - 4rem);
+                }
+                
+                .display-panel {
+                    flex: 1;
+                    min-height: calc(50dvh - 2rem);
+                    height: calc(50dvh - 2rem);
+                    max-height: calc(50dvh - 2rem);
+                }
+
+                .chat-panel {
+                    flex: 1;
+                    min-width: unset;
+                    width: unset;
+                    max-width: unset;
+                    min-height: calc(50dvh - 2rem);
+                    height: calc(50dvh - 2rem);
+                    max-height: calc(50dvh - 2rem);
+                }
+                
+                .hide-mobile {
+                    display: none;
+                }
+                
+                table {
+                    width: 100%;
+                }
             }
         </style>
         <script>
