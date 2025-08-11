@@ -31,6 +31,19 @@
             .description {
                 font-size: 14pt;
                 flex-grow: 1;
+                line-height: 1.35lh;
+            }
+            
+            .links {
+                padding-top: 0.8rem;
+                min-width: 32px;
+                text-align: center;
+            }
+            
+            .links img {
+                border-radius: 1rem;
+                width: 24px;
+                margin-bottom: 0.2rem;
             }
             
             .features table {
@@ -55,9 +68,15 @@
             a:hover {
                 text-decoration: underline;
             }
+            
+            h2 {
+                text-align: center;
+                margin-bottom: 3rem;
+            }
         </style>
     </head>
     <body>
+        <h2>Convirgance (AI Services) Examples</h2>
         <div class="application">
             <div class="icon">
                 <a href="silly.html">
@@ -65,7 +84,23 @@
                 </a>
             </div>
             <div class="description">
-                <a href="silly.html">Silly AI</a> - AI provides silly answers to questions using information drawn from an in-memory RAG.
+                <a href="silly.html">Silly AI</a> - AI provides silly answers to questions using 
+                information drawn from an in-memory RAG. Maintains a generally light-hearted
+                attitude. When certain questions are asked, it draws upon "facts" to give
+                extra-silly answers! No conversational history. Each question is a brand new
+                session. Whatever you do, don't say "Hello". &#x1F609;
+            </div>
+            <div class="links">
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/services/silly.xml">
+                        <img src="images/ai.svg" alt="Bot XM with RAG instructionsL" title="Bot XML with RAG instructions">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/silly.html">
+                        <img src="images/html.svg" alt="HTML" title="HTML">
+                    </a>
+                </div>
             </div>
             <div class="features">
                 <table>
@@ -99,7 +134,27 @@
                 </a>
             </div>
             <div class="description">
-                <a href="docs.html">Convirgance Help</a> - Interactive help with the Convirgance platform.
+                <a href="docs.html">Convirgance Help</a> - Q&A bot for the Convirgance platform. Loaded
+                with the official platform documentation in markdown format, the AI does a fairly good
+                job of answering most questions. However, it is limited by the limitations of the docs
+                and thus may provide hallucinated answers in some cases.
+            </div>
+            <div class="links">
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/services/docs.xml">
+                        <img src="images/ai.svg" alt="Q&A Bot XML" title="Q&A Bot XML">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/docs.html">
+                        <img src="images/html.svg" alt="HTML" title="HTML">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/tree/main/src/main/webapp/docs">
+                        <img src="images/book.svg" alt="Markdown documents" title="Markdown documents">
+                    </a>
+                </div>
             </div>
             <div class="features">
                 <table>
@@ -133,7 +188,27 @@
                 </a>
             </div>
             <div class="description">
-                <a href="character.html">Characters</a> - Conversational chatbot posing as a variety of characters.
+                <a href="character.html">Characters</a> - Conversational chatbot posing as a variety of 
+                characters. The AI is instructed to behave like your chosen character and to remain in
+                character throughout the conversation. Conversation history is maintained, allows you
+                to have sophisticated interactions.
+            </div>
+            <div class="links">
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/services/character.xml">
+                        <img src="images/ai.svg" alt="Chat Bot XML" title="Chat Bot XML">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/services/character/init.xml">
+                        <img src="images/xml.svg" alt="Chat Initialization XML" title="Chat Initialization XML">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/character.html">
+                        <img src="images/html.svg" alt="HTML" title="HTML">
+                    </a>
+                </div>
             </div>
             <div class="features">
                 <table>
@@ -167,7 +242,33 @@
                 </a>
             </div>
             <div class="description">
-                <a href="todo.html">Todo</a> - An AI driven TODO list.
+                <a href="todo.html">Todo</a> - An AI driven TODO list. Capable of adding tasks,
+                changing statuses, providing insights into the contents of the list, and 
+                responding to abstract concepts like "last updated task". Uses tools to manage
+                the list. No conversation support at the moment, so make sure you provide
+                sufficient context in each request.
+            </div>
+            <div class="links">
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/services/todo/chat.xml">
+                        <img src="images/ai.svg" alt="Chat Bot XML" title="Chat Bot XML">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/todo.html">
+                        <img src="images/html.svg" alt="HTML" title="HTML">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/blob/main/src/main/webapp/services/todo.xml">
+                        <img src="images/xml.svg" alt="REST Service" title="REST Service">
+                    </a>
+                </div>
+                <div>
+                    <a target="_blank" href="https://github.com/InvirganceExampleCode/ConvirganceAIExample/tree/main/src/main/java/com/invirgance/example/todo">
+                        <img src="images/java.svg" alt="Java Components" title="Java Components">
+                    </a>
+                </div>
             </div>
             <div class="features">
                 <table>
