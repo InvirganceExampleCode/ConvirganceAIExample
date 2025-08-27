@@ -10,6 +10,7 @@
         <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/table.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/display.js" defer></script>
         <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/pager.js" defer></script>
+        <script src="js/chat.js" defer></script>
         <style>
             body {
                 padding: 0;
@@ -254,62 +255,11 @@
                 loading(false);
             }
             
-            async function processResponse(response)
-            {
-                var complete = false;
-                var text = "";
-                
-                var output = document.getElementById("response");
-                var reader = response.body.getReader();
-                
-                while(!complete)
-                {
-                    const { value, done } = await reader.read();
-                    const lines = new TextDecoder().decode(value).split(/\r?\n|\r/);
-
-                    for(var line of lines)
-                    {
-                        if(line.trim().length < 1) continue;
-
-                        line = JSON.parse(line);
-                        
-                        if(line.action === 'generateReport')
-                        {
-                            generateReport(line);
-                            continue;
-                        }
-                        
-                        text += line.message.content;
-                        output.innerHTML = marked.parse(text);
-                        
-                        if(line.done) break;
-                    }
-                    
-                    complete = done;
-                }
-            }
-            
-            async function getResponse(question)
-            {
-                try
-                {
-                    var output = document.getElementById("response");
-                    var response = await fetch("services/olap/chat?chat=" + encodeURIComponent(question));
-                    
-                    await processResponse(response);
-                }
-                catch(e)
-                {
-                    output.innerHTML = marked.parse("**I'm sorry!** I think I misunderstood and am unable to process your request. Can you rephrase your request?");
-       
-                    console.error(e);
-                }
-            }
-            
             async function ask()
             {
                 var question = document.getElementById("question");
                 var button = document.getElementById("button");
+                var output = document.getElementById("response");
                 
                 if(!question.value.trim()) return;
                 
@@ -318,7 +268,7 @@
                 document.getElementById("response").classList.add("loading");
                 document.getElementById("response").textContent = "Thinking...";
                 
-                await getResponse(question.value);
+                await chat("services/olap/chat", question.value, output);
 
                 button.removeAttribute("disabled");
                 question.removeAttribute("disabled");

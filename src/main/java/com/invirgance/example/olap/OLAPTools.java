@@ -128,8 +128,18 @@ public class OLAPTools
         {
             var request = new JSONObject();
             
-            if(dimensions.trim().length() < 1) dimensions = "[]";
-            if(measures.trim().length() < 1) measures = "[]";
+            dimensions = dimensions.trim();
+            measures = measures.trim();
+            
+            if(dimensions.isEmpty() && measures.isEmpty()) return "";
+            
+            // Handle empty strings
+            if(dimensions.length() < 1) dimensions = "[]";
+            if(measures.length() < 1) measures = "[]";
+            
+            // Handle single quotes instead of double quotes
+            if(!dimensions.contains("\"") && dimensions.contains("'")) dimensions = dimensions.replace("'", "\"");
+            if(!measures.contains("\"") && measures.contains("'")) measures = measures.replace("'", "\"");
             
             request.put("dimensions", new JSONArray(dimensions));
             request.put("measures", new JSONArray(measures));
