@@ -12,6 +12,7 @@
     <binding>
         <ollama-start-conversation>
             <pull>true</pull>
+            <stream>true</stream>
             <system>
                 <![CDATA[
                 Talk like ${character} and pretend to be that character. Send a greeting 
@@ -29,7 +30,7 @@
         </ollama-start-conversation>
     </binding>
     <output>
-        <JSONOutput/>
+        <StreamingJSONOutput/>
     </output>
 </SelectService>
 

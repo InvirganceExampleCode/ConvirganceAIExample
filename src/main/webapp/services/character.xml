@@ -27,9 +27,10 @@
                     </ollama-conversation>
                 </list>
             </advisors>
+            <stream>true</stream>
         </ollama-model>
     </binding>
     <output>
-        <JSONOutput/>
+        <StreamingJSONOutput/>
     </output>
 </SelectService>

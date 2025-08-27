@@ -4,6 +4,8 @@
         <title>Conversation with a Character</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="webjars/marked/16.1.2/lib/marked.umd.js" defer></script>
+        <script src="js/chat.js" defer></script>
         <style>
             html {
                 color: #666;
@@ -80,7 +82,6 @@
                 line-height: 1.2lh;
                 padding: 0 0.2rem;
                 vertical-align: middle;
-                white-space: pre-wrap;
             }
             
             #choose {
@@ -108,6 +109,7 @@
                 justify-content: center;
                 flex-grow: 1;
                 font-size: 300%;
+                text-align: center;
             }
             
             .hidden {
@@ -154,40 +156,22 @@
                 }
             }
             
-            async function getResponse(chat)
-            {
-                var response = await fetch("services/character?chat=" + encodeURIComponent(chat));
-                var json;
-
-                if(!response.ok)
-                {
-                    return "An error occurred while chatting. Your session may have expired. Refresh the page and try again.";
-                }
-
-                json = await response.json();
-
-                return json[0].response;
-            }
-            
-            async function chat()
+            async function sendChat()
             {
                 var question = document.getElementById("question");
                 var output = document.getElementById("response");
-                var response;
+                var url = "services/character";
                 
                 if(!question.value.trim()) return;
                 
                 thinking(true);
                 
-                response = await getResponse(question.value);
-                
-                thinking(false);
-                
-                output.textContent = response;
-                output.scrollTo(0, 0);
-                
-                question.setAttribute("placeholder", question.value);
-                question.value = "";
+                await chat(url, question.value, output, function() { 
+                    thinking(false); 
+                    
+                    question.setAttribute("placeholder", question.value);
+                    question.value = "";
+                });
             }
             
             function changeCharacter()
@@ -202,15 +186,13 @@
             async function startConversation()
             {
                 var character = document.getElementById("character");
+                var output = document.getElementById("response");
+                var url = "services/character/init/" + encodeURIComponent(character.value);
                 
                 thinking(true);
                 
-                var response = await fetch("services/character/init/" + encodeURIComponent(character.value));
-                var json = await response.json();
+                await chat(url, "", output, function() { thinking(false); });
 
-                thinking(false);
-                
-                document.getElementById("response").textContent = json[0].response;
             }
         </script>
     </head>
@@ -240,7 +222,7 @@
                 Thinking...
             </div>
             <div>
-                <form onsubmit="chat(); return false;">
+                <form onsubmit="sendChat(); return false;">
                     <input id="question" disabled="disabled">
                     <button id="button" disabled="disabled">Chat</button>
                 </form>
