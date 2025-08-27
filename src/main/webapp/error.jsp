@@ -7,12 +7,14 @@
         <title>An error has occurred</title>
     </head>
     <body>
-        <h2>An error has occurred</h2>
+        <h2>A <%= response.getStatus() %> error has occurred</h2>
+<% if(exception != null) { %>
         <p>
             <pre><%=exception.getMessage() %></pre>
         </p>
         <p>
             <pre><% exception.printStackTrace(new PrintWriter(out)); %></pre>
         </p>
+<% } %>
     </body>
 </html>

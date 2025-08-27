@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SelectService>
+    <parameters>
+        <list>
+            <RequestArrayParameter>
+                <name>dimensions</name>
+            </RequestArrayParameter>
+            <RequestArrayParameter>
+                <name>measures</name>
+            </RequestArrayParameter>
+        </list>
+    </parameters>
+    <binding>
+        <StarQueryBinding>
+            <jndiName>jdbc/retail</jndiName>
+            <schema>sales.xml</schema>
+            <caseSensitive>true</caseSensitive>
+            <logQuery>true</logQuery>
+        </StarQueryBinding>
+    </binding>
+    <output>
+        <JSONOutput/>
+    </output>
+</SelectService>

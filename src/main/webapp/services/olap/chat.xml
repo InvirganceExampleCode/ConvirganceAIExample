@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SelectService>
+    <parameters>
+        <list>
+            <RequestParameter>
+                <name>chat</name>
+            </RequestParameter>
+            <OLAPParameters>
+                <name>dimensions</name>
+                <tools>
+                    <ref id="tools" />
+                </tools>
+            </OLAPParameters>
+            <OLAPParameters>
+                <name>measures</name>
+                <tools>
+                    <ref id="tools" />
+                </tools>
+            </OLAPParameters>
+        </list>
+    </parameters>
+    <binding>
+        <ollama-model>
+            <model>AI_Automations/agent_zero</model>
+            <pull>true</pull>
+            <stream>true</stream>
+            <system>
+<![CDATA[
+You are an assistant generating OLAP reports for a user. Use available tools to
+generate reports requested. You must use a tool to generate the report. 
+
+If you can complete an action but the user provides insufficient 
+information to take that action, do not proceed. Tell the user 
+what information you're missing to take the action.
+
+Do not render a report in your response. The report will be displayed to the 
+user separately via the tool call.
+
+Available Dimensions: [ ${dimensions} ]
+
+Available Measures: [ ${measures} ]
+]]>
+            </system>
+            <chat>${chat}</chat>
+            <tools>
+                <list>
+                    <OLAPTools id="tools">
+                        <star>sales.xml</star>
+                    </OLAPTools>
+                </list>
+            </tools>
+            <options>
+                <json>
+                { "temperature": 0 }
+                </json>
+            </options>
+        </ollama-model>
+    </binding>
+    <transformers>
+        <list>
+            <OLAPReportTransformer />
+        </list>
+    </transformers>
+    <output>
+        <StreamingJSONOutput/>
+    </output>
+</SelectService>

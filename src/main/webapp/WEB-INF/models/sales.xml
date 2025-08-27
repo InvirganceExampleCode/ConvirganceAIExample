@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<list>
+    
+    <Table id="brands">
+        <name>BRANDS</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+    
+    <Table id="categories">
+        <name>CATEGORIES</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+    
+    <Table id="dates">
+        <name>DATES</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+    
+    <Table id="employees">
+        <name>EMPLOYEES</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+    
+    <Table id="franchises">
+        <name>FRANCHISES</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+    
+    <Table id="products">
+        <name>PRODUCTS</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+
+    <Table id="skus">
+        <name>SKUS</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+
+    <Table id="stores">
+        <name>STORES</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+
+    <Table id="times">
+        <name>TIMES</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+
+    <Table id="zipcodes">
+        <name>ZIPCODES</name>
+        <primaryKey>id</primaryKey>
+    </Table>
+    
+    <Table id="sales">
+        <name>SALES</name>
+        <foreignKeys>
+            <list>
+                <ForeignKey>
+                    <sourceKey>FranchiseId</sourceKey>
+                    <target>
+                        <ref id="franchises" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>StoreId</sourceKey>
+                    <target>
+                        <ref id="stores" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>BrandId</sourceKey>
+                    <target>
+                        <ref id="brands" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>CategoryId</sourceKey>
+                    <target>
+                        <ref id="categories" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>ProductId</sourceKey>
+                    <target>
+                        <ref id="products" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>SkuId</sourceKey>
+                    <target>
+                        <ref id="skus" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>DateId</sourceKey>
+                    <target>
+                        <ref id="dates" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>TimeId</sourceKey>
+                    <target>
+                        <ref id="times" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>ZipCodeId</sourceKey>
+                    <target>
+                        <ref id="zipcodes" />
+                    </target>
+                </ForeignKey>
+                <ForeignKey>
+                    <sourceKey>CheckoutEmployeeId</sourceKey>
+                    <target>
+                        <ref id="employees" />
+                    </target>
+                </ForeignKey>
+            </list>
+        </foreignKeys>
+    </Table>
+    
+    <Database>
+        <name>RETAIL</name>
+        <tables>
+            <list>
+                <ref id="brands"/>
+                <ref id="categories"/>
+                <ref id="dates"/>
+                <ref id="employees"/>
+                <ref id="franchises"/>
+                <ref id="products"/>
+                <ref id="sales"/>
+                <ref id="skus"/>
+                <ref id="stores"/>
+                <ref id="times"/>
+                <ref id="zipcodes"/>
+            </list>
+        </tables>
+    </Database>
+    
+    <Star>
+        <fact>
+            <ref id="sales"/>
+        </fact>
+        <dimensions>
+            <list>
+            <Dimension>
+                <name>Brand Name</name>
+                <column>Name</column>
+                <table>
+                    <ref id="brands"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Category</name>
+                <column>Name</column>
+                <table>
+                    <ref id="categories"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Product Type</name>
+                <column>Type</column>
+                <table>
+                    <ref id="categories"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Product Subtype</name>
+                <column>SubType</column>
+                <table>
+                    <ref id="categories"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Year</name>
+                <column>Year</column>
+                <table>
+                    <ref id="dates"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Month</name>
+                <column>Month</column>
+                <table>
+                    <ref id="dates"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Day</name>
+                <column>Day</column>
+                <table>
+                    <ref id="dates"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Month Name</name>
+                <column>MonthName</column>
+                <table>
+                    <ref id="dates"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Day Name</name>
+                <column>DayName</column>
+                <table>
+                    <ref id="dates"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Employee First Name</name>
+                <column>Firstname</column>
+                <table>
+                    <ref id="employees"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Employee Last Name</name>
+                <column>Lastname</column>
+                <table>
+                    <ref id="employees"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Employee Sex</name>
+                <column>Sex</column>
+                <table>
+                    <ref id="employees"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Franchise Name</name>
+                <column>Name</column>
+                <table>
+                    <ref id="franchises"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>International</name>
+                <column>International</column>
+                <table>
+                    <ref id="franchises"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Product Name</name>
+                <column>Name</column>
+                <table>
+                    <ref id="products"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Product MSRP</name>
+                <column>Name</column>
+                <table>
+                    <ref id="products"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Product Size</name>
+                <column>Size</column>
+                <table>
+                    <ref id="skus"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Product Color</name>
+                <column>Color</column>
+                <table>
+                    <ref id="skus"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Store Name</name>
+                <column>Name</column>
+                <table>
+                    <ref id="stores"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Store Number</name>
+                <column>StoreNumber</column>
+                <table>
+                    <ref id="stores"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Zip Code</name>
+                <column>ZipCode</column>
+                <table>
+                    <ref id="stores"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Country Code</name>
+                <column>CountryCode</column>
+                <table>
+                    <ref id="stores"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Sale Hour</name>
+                <column>Hour</column>
+                <table>
+                    <ref id="times"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Sale Minute</name>
+                <column>Minute</column>
+                <table>
+                    <ref id="times"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Sale Time</name>
+                <column>TwelveHour</column>
+                <table>
+                    <ref id="times"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Sale Time (24hr)</name>
+                <column>TwentyFourHour</column>
+                <table>
+                    <ref id="times"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Area Name</name>
+                <column>AreaName</column>
+                <table>
+                    <ref id="zipcodes"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>City Name</name>
+                <column>CityName</column>
+                <table>
+                    <ref id="zipcodes"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>District Name</name>
+                <column>DistrictName</column>
+                <table>
+                    <ref id="zipcodes"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Locale Name</name>
+                <column>LocaleName</column>
+                <table>
+                    <ref id="zipcodes"/>
+                </table>
+            </Dimension>
+            </list>
+        </dimensions>
+        <measures>
+            <list>
+            <SumMeasure>
+                <name>Units Sold</name>
+                <metric>
+                    <Metric>
+                        <column>Quantity</column>
+                        <table>
+                            <ref id="sales"/>
+                        </table>
+                    </Metric>
+                </metric>
+            </SumMeasure>
+            <SumMeasure>
+                <name>Total Sale $</name>
+                <metric>
+                    <Metric>
+                        <column>TotalPrice</column>
+                        <table>
+                            <ref id="sales"/>
+                        </table>
+                    </Metric>
+                </metric>
+            </SumMeasure>
+            <AverageMeasure>
+                <name>Average Sale $</name>
+                <metric>
+                    <Metric>
+                        <column>TotalPrice</column>
+                        <table>
+                            <ref id="sales"/>
+                        </table>
+                    </Metric>
+                </metric>
+            </AverageMeasure>
+            </list>
+        </measures>
+    </Star>
+    
+</list>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Todo List</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+        <script src="webjars/marked/16.1.2/lib/marked.umd.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/base/base.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/table.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/display.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/pager.js" defer></script>
+        <style>
+            body {
+                padding: 0;
+                margin: 0;
+                line-height: 1.4lh;
+                font-family: sans-serif;
+                overflow: hidden;
+            }
+            
+            table {
+                border-collapse: collapse;
+            }
+            
+            table thead {
+                color: #039;
+            }
+            
+            tr {
+                border-bottom: 4px solid #eee;
+            }
+            
+            th, td {
+                text-align: left;
+                padding: 4px 0.75rem;
+            }
+            
+            td {
+                color: #333;
+            }
+            
+            .display-panel {
+                flex-grow: 1;
+                overflow: auto;
+            }
+            
+            .chat-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                min-width: 300px;
+                width: min(40%, 350px);
+                max-width: min(40%, 480px);
+            }
+            
+            .chat-panel form {
+                display: flex;
+                gap: 0.5rem;
+            }
+            
+            .chat-panel form input {
+                flex-grow: 1;
+            }
+            
+            .timestamp {
+                white-space: nowrap;
+            }
+            
+            input, button {
+                border-radius: 0.4rem;
+                border: 1px solid #999;
+                font-family: AppleSystemUIFont, sans-serif;
+                font-size: 10pt;
+                padding: 0.4rem 0.6rem;
+            }
+            
+            button {
+                background-color: #007bff;
+                color: #FEFEFE;
+            }
+            
+            button:hover {
+                background-color: #226bef;
+                color: white;
+            }
+            
+            *[disabled], *[disabled]:hover {
+                background-color: #FEFEFE;
+                color: #ccc;
+            }
+            
+            #panels {
+                display: flex;
+                height: calc(100dvh - 4rem);
+                padding: 2rem;
+                gap: 0.5rem;
+            }
+            
+            #response {
+                border: 1px solid #999;
+                border-radius: 0.4rem;
+                flex-grow: 1;
+                padding: 0 0.6rem;
+                overflow: auto;
+            }
+            
+    
+            .table {
+                min-height: calc((1lh + 9px) * 11);
+            }
+
+            .pager-bar {
+                display: flex;
+                align-items: center;
+            }
+
+            .pager-bar paginated-display {
+                flex-grow: 1;
+            }
+
+            .pager-bar.loading {
+                height: 1.5lh;
+                overflow: hidden;
+                border-top: 16px solid white;
+                border-bottom: 16px solid white;
+            }
+
+            @keyframes loading {
+                to {
+                    background-position-x: -20%;
+                }
+            }
+            
+            .display-panel .loading {
+                animation: 1s loading ease-in-out infinite;
+                background-color: #ededed !important;
+                background: linear-gradient(
+                    100deg,
+                    rgba(255, 255, 255, 0) 40%,
+                    rgba(255, 255, 255, .5) 50%,
+                    rgba(255, 255, 255, 0) 60%
+                ) #ededed;
+                background-size: 200% 100%;
+                background-position-x: 180%;
+                transition-duration: 0.1s;
+            }
+
+            .table > *, .pager-bar > * {
+                opacity: 1.0;
+                transition-duration: 0.5s;
+                transition-property: background-color, opacity;
+            }
+
+            .table.loading > *, .pager-bar.loading > * {
+                opacity: 0.0;
+                transition-duration: 0.1s;
+                transition-property: background-color, opacity;
+            }
+
+            .table, .pager-bar {
+                transition-duration: 0.5s;
+                transition-property: background-color, opacity;
+            }
+            
+            @media (orientation: portrait) {
+                
+                #panels {
+                    flex-direction: column;
+                    min-height: calc(100dvh - 4rem);
+                    height: calc(100dvh - 4rem);
+                    max-height: calc(100dvh - 4rem);
+                }
+                
+                .display-panel {
+                    flex: 1;
+                    min-height: calc(50dvh - 2rem);
+                    height: calc(50dvh - 2rem);
+                    max-height: calc(50dvh - 2rem);
+                }
+
+                .chat-panel {
+                    flex: 1;
+                    min-width: unset;
+                    width: unset;
+                    max-width: unset;
+                    min-height: calc(50dvh - 2rem);
+                    height: calc(50dvh - 2rem);
+                    max-height: calc(50dvh - 2rem);
+                }
+                
+                .hide-mobile {
+                    display: none;
+                }
+                
+                table {
+                    width: 100%;
+                }
+            }
+        </style>
+        <script>
+            function loading(loading)
+            {
+                document.querySelectorAll(".table, .pager-bar").forEach(function(element) {
+                    if(loading) element.classList.add("loading");
+                    else element.classList.remove("loading");
+                });
+            }
+            
+            function clearColumns()
+            {
+                for(var column of document.getElementById("report").columns())
+                {
+                    report.removeColumn(column);
+                }
+            }
+            
+            async function loadReport(dimensions, measures)
+            {
+                var dimensionParams =  dimensions.length ? "dimensions=" + dimensions.join("&dimensions=") : "";
+                var measureParams = measures.length ? "measures=" + measures.join("&measures=") : "";
+                
+                var report = document.getElementById("report");
+                var response = await fetch("services/olap?" + dimensionParams + "&" + measureParams);
+                var data = await response.json();
+                
+                for(var dimension of dimensions)
+                {
+                    report.addColumn(dimension, dimension, { "type": "string" });
+                }
+                
+                for(var measure of measures)
+                {
+                    report.addColumn(measure, measure, {
+                        "type": (measure.includes("$") || measure.includes("Dollar")) ? "money" : "number"
+                    });
+                }
+
+                report.data(data);
+            }
+            
+            async function generateReport(query)
+            {
+                loading(true);
+                
+                clearColumns(); // Reset the report
+                
+                report.data([]);
+                report.page(0);
+                report.sort(null);
+                
+                await loadReport(query.dimensions, query.measures);
+                
+                loading(false);
+            }
+            
+            async function processResponse(response)
+            {
+                var complete = false;
+                var text = "";
+                
+                var output = document.getElementById("response");
+                var reader = response.body.getReader();
+                
+                while(!complete)
+                {
+                    const { value, done } = await reader.read();
+                    const lines = new TextDecoder().decode(value).split(/\r?\n|\r/);
+
+                    for(var line of lines)
+                    {
+                        if(line.trim().length < 1) continue;
+
+                        line = JSON.parse(line);
+                        
+                        if(line.action === 'generateReport')
+                        {
+                            generateReport(line);
+                            continue;
+                        }
+                        
+                        text += line.message.content;
+                        output.innerHTML = marked.parse(text);
+                        
+                        if(line.done) break;
+                    }
+                    
+                    complete = done;
+                }
+            }
+            
+            async function getResponse(question)
+            {
+                try
+                {
+                    var output = document.getElementById("response");
+                    var response = await fetch("services/olap/chat?chat=" + encodeURIComponent(question));
+                    
+                    await processResponse(response);
+                }
+                catch(e)
+                {
+                    output.innerHTML = marked.parse("**I'm sorry!** I think I misunderstood and am unable to process your request. Can you rephrase your request?");
+       
+                    console.error(e);
+                }
+            }
+            
+            async function ask()
+            {
+                var question = document.getElementById("question");
+                var button = document.getElementById("button");
+                
+                if(!question.value.trim()) return;
+                
+                button.setAttribute("disabled", "disabled");
+                question.setAttribute("disabled", "disabled");
+                document.getElementById("response").classList.add("loading");
+                document.getElementById("response").textContent = "Thinking...";
+                
+                await getResponse(question.value);
+
+                button.removeAttribute("disabled");
+                question.removeAttribute("disabled");
+                document.getElementById("response").classList.remove("loading");
+            }
+        </script>
+    </head>
+    <body>
+        <div id="panels">
+            <div class="display-panel">
+                <div class="table">
+                    <paginated-table id="report">
+                        <columns></columns>
+                        <link href="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/themes/base/paginated/table.css" rel="stylesheet" type="text/css">
+                    </paginated-table>
+                </div>
+                <div class="pager-bar">
+                    <paginated-display table="#report">
+                        <link href="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/themes/base/paginated/display.css" rel="stylesheet" type="text/css">
+                    </paginated-display>
+                    <paginated-pager id="pager" table="#report">
+                        <link href="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/themes/base/paginated/pager.css" rel="stylesheet" type="text/css">
+                    </paginated-pager>
+                </div>
+            </div>
+            <div class="chat-panel">
+                <div id="response"></div>
+                <div>
+                    <form onsubmit="ask(); return false;">
+                        <input id="question">
+                        <button id="button">Ask</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
