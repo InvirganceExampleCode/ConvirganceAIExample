@@ -1,3 +1,5 @@
+const toolActions = {};
+
 async function processResponse(response, output)
 {
     var reader = response.body.getReader();
@@ -25,9 +27,11 @@ async function processResponse(response, output)
                 console.error(e);
             }
 
-            if(line.action === 'generateReport')
+            if(line.action)
             {
-                generateReport(line);
+                if(toolActions[line.action]) toolActions[line.action](line);
+                else console.error("Unable to handle action: " + line.action);
+                
                 continue;
             }
 

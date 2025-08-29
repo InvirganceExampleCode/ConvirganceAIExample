@@ -70,6 +70,9 @@ public class OLAPParameters implements Parameter
             case "measures":
                 return tools.getMeasures();
                 
+            case "table":
+                return tools.getDimensionsAndMeasures();
+                
             default:
                 throw new ConvirganceException("Unsupported parameter type: " + name);
         }

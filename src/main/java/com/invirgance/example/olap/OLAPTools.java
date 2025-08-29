@@ -89,51 +89,92 @@ public class OLAPTools
         loadStar();
     }
     
+    public String getDimensionsAndMeasures()
+    {
+        var star = loadStar();
+        var buffer = new StringBuffer();
+        
+        buffer.append("| Type      | Name           |\n");
+        buffer.append("|-----------|----------------|\n");
+        
+        for(var dimension : star.getDimensions())
+        {
+            buffer.append("| dimension | ").append(dimension.getName()).append(" |\n");
+        }
+        
+        for(var measure : star.getMeasures())
+        {
+            buffer.append("| measure   | ").append(measure.getName()).append(" |\n");
+        }
+        
+        return buffer.toString();
+    }
+    
     @Tool("Provides a list of OLAP Dimensions contained in the Star Schema")
     public String getDimensions()
     {
         StringBuffer buffer = new StringBuffer();
+        JSONArray values = new JSONArray();
         
         for(var dimension : loadStar().getDimensions())
         {
             if(buffer.length() > 0) buffer.append(", ");
             
             buffer.append(dimension.getName());
+            values.add(dimension.getName());
         }
         
         return buffer.toString();
+//        return values.toString();
     }
     
     @Tool("Provides a list of OLAP Measures contained in the Star Schema")
     public String getMeasures()
     {
         StringBuffer buffer = new StringBuffer();
+        JSONArray values = new JSONArray();
         
         for(var measure : loadStar().getMeasures())
         {
             if(buffer.length() > 0) buffer.append(", ");
             
             buffer.append(measure.getName());
+            values.add(measure.getName());
         }
         
         return buffer.toString();
+//        return values.toString();
     }
     
-    @Tool("Generate an OLAP report using the specified dimensions and measures. Call when the user requests a report to be generated.")
-    public String generateReport(
-            @ToolParam("List of dimensions to include in the report. Only dimensions from the available dimensions list can be passed.") String dimensions, 
-            @ToolParam("List of measures to include in the report. Only measures from the available measures list can be passed.") String measures)
+    @Tool("Call this when the user is asking for suggestions")
+    public String handleSuggestions(
+            @ToolParam("Details of the user's request") String request)
     {
+        return "Analyze the list of dimensions and measures to suggest possible reports the user could run";
+    }
+    
+    @Tool("Call this when the user wants an OLAP report generated.")
+    public String generateReport(
+            @ToolParam("List of dimensions to include in the report. Send list of names as a JSON array.") String dimensions, 
+            @ToolParam("List of measures to include in the report. Send list of names as a JSON array.") String measures)
+    {
+        JSONObject request = new JSONObject();
+        String dimension;
+        String measure;
+        
+        JSONArray parsedDimensions;
+        JSONArray parsedMeasures;
+        
         try
         {
-            var request = new JSONObject();
+            if(dimensions == null) dimensions = "[]";
+            if(measures == null) measures = "[]";
             
             dimensions = dimensions.trim();
             measures = measures.trim();
             
-            if(dimensions.isEmpty() && measures.isEmpty()) return "";
-            
             // Handle empty strings
+            if(dimensions.isEmpty() && measures.isEmpty()) return "";
             if(dimensions.length() < 1) dimensions = "[]";
             if(measures.length() < 1) measures = "[]";
             
@@ -141,16 +182,58 @@ public class OLAPTools
             if(!dimensions.contains("\"") && dimensions.contains("'")) dimensions = dimensions.replace("'", "\"");
             if(!measures.contains("\"") && measures.contains("'")) measures = measures.replace("'", "\"");
             
-            request.put("dimensions", new JSONArray(dimensions));
-            request.put("measures", new JSONArray(measures));
+            parsedDimensions = new JSONArray(dimensions);
+            parsedMeasures = new JSONArray(measures);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Dimensions: " + dimensions);
+            System.out.println("Measures: " + measures);
+            
+            e.printStackTrace();
+            
+            return "Your inputs were not valid JSON. Please review the dimensions and measures list to ensure that you correctly passed JSON and try again.";
+        }
+        
+        for(int i=0; i<parsedDimensions.size(); i++)
+        {
+            dimension = parsedDimensions.getString(i);
+            
+            if(star.getDimension(dimension) == null)
+            {
+                System.err.println("Invalid dimension: " + dimension);
+                System.err.println("Dimensions: " + dimensions);
+                System.err.println("Measures: " + measures);
+                
+                if(star.getMeasure(dimension) != null)
+                {
+                    System.err.println("Measure " + dimension + " accidentally passed as dimension.");
+                    
+                    parsedMeasures.add(0, dimension);
+                    parsedDimensions.remove(i--);
+                    
+                    continue;
+                }
+                
+                return "You passed an invalid dimension name. Double check the name and try again. Invalid dimension was: " + dimension;
+            }
+        }
+        
+        try
+        {
+            request.put("dimensions", parsedDimensions);
+            request.put("measures", parsedMeasures);
             
             ServiceState.set("report", request);
         }
         catch(Exception e)
         {
+            System.err.println("Dimensions: " + dimensions);
+            System.err.println("Measures: " + measures);
+            
             e.printStackTrace();
             
-            return "The following error occurred when attempting to generate the report: " + e.getMessage();
+            return "Explain to the user that there was an error generating the report and provide helpful suggestions for how to correct the error. Do not respond with data. Do not respond with a report. Here is the error that occurred when attempting to generate the report: " + e.getMessage();
         }
         
         return "Report successfully generated. The user will see the report on their screen. Instruct the user to view the report output. Do not attempt to answer the question further.";

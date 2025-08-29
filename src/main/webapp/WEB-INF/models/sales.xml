@@ -252,7 +252,7 @@
             </Dimension>
             <Dimension>
                 <name>Product MSRP</name>
-                <column>Name</column>
+                <column>Price</column>
                 <table>
                     <ref id="products"/>
                 </table>

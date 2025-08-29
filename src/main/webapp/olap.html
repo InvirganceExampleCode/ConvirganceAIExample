@@ -10,7 +10,7 @@
         <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/table.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/display.js" defer></script>
         <script src="https://cdn.jsdelivr.net/gh/InvirganceOpenSource/emirgance/src/main/resources/paginated/pager.js" defer></script>
-        <script src="js/chat.js" defer></script>
+        <script src="js/chat.js"></script>
         <style>
             body {
                 padding: 0;
@@ -254,6 +254,8 @@
                 
                 loading(false);
             }
+            
+            toolActions["generateReport"] = generateReport;
             
             async function ask()
             {

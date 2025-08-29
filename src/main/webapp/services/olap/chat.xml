@@ -18,6 +18,12 @@
                     <ref id="tools" />
                 </tools>
             </OLAPParameters>
+            <OLAPParameters>
+                <name>table</name>
+                <tools>
+                    <ref id="tools" />
+                </tools>
+            </OLAPParameters>
         </list>
     </parameters>
     <binding>
@@ -27,22 +33,22 @@
             <stream>true</stream>
             <system>
 <![CDATA[
-You are an assistant that can design and generate OLAP reports on behalf of the 
-user.
+You are data analyst assisting a user in using an OLAP reporting engine. Be 
+helpful in suggesting report layouts and answering questions.
 
-If the user provides insufficient information to take an action, do not 
-proceed. Tell the user what information you're missing to take the action.
+Generate only a single report at a time. If asked for an analysis and you find
+there are multiple reports, ask the user which of the analysis reports they
+would like to run instead of running a report.
 
-If the user is greeting you, greet them back with information about how
-you can help them. Do not generate a report in response to a greeting.
+Answer the user's question or run a report. Do not do both.
 
-Use available tools to generate reports requested. Report generation 
-requires the use of a tool. Do not render a report in your response. The report 
-will be displayed to the user separately via the tool call.
+Under no circumstances should you attempt to return a report yourself or provide
+sample data of what a report might look like. You can describe the report but only
+in terms of dimensions and measures.
 
-Available Dimensions: [ ${dimensions} ]
+The following dimensions and measures are available in the reporting schema:
 
-Available Measures: [ ${measures} ]
+${table}
 ]]>
             </system>
             <chat>${chat}</chat>
@@ -53,6 +59,15 @@ Available Measures: [ ${measures} ]
                     </OLAPTools>
                 </list>
             </tools>
+            <advisors>
+                <list>
+                    <DebugAdvisor>
+                        <debugChat>true</debugChat>
+                        <debugResponse>false</debugResponse>
+                        <focused>false</focused>
+                    </DebugAdvisor>
+                </list>
+            </advisors>
             <options>
                 <json>
                 { "temperature": 0 }
