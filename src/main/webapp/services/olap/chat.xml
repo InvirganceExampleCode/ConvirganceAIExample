@@ -61,11 +61,12 @@ ${table}
             </tools>
             <advisors>
                 <list>
-                    <DebugAdvisor>
+                    <ollama-conversation />
+<!--                    <DebugAdvisor>
                         <debugChat>true</debugChat>
                         <debugResponse>false</debugResponse>
                         <focused>false</focused>
-                    </DebugAdvisor>
+                    </DebugAdvisor>-->
                 </list>
             </advisors>
             <options>
