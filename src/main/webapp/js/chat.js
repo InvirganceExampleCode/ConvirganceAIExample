@@ -29,6 +29,7 @@ async function processResponse(response, output)
                 console.error(e);
                 
                 buffer += line;
+                continue;
             }
 
             if(line.action)
