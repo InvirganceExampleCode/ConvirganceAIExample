@@ -5,6 +5,7 @@ async function processResponse(response, output)
     var reader = response.body.getReader();
     var complete = false;
     var text = "";
+    var buffer = "";
     
     output.scrollTo(0, 0);
 
@@ -19,12 +20,15 @@ async function processResponse(response, output)
 
             try
             {
-                line = JSON.parse(line);
+                line = JSON.parse(buffer + line);
+                buffer = "";
             }
             catch(e)
             {
                 console.log("Failed line:", line);
                 console.error(e);
+                
+                buffer += line;
             }
 
             if(line.action)
